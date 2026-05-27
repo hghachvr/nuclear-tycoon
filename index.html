@@ -8,89 +8,84 @@
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --bg:#070a07;--panel:#0d130d;--border:#1a3a1a;--green:#00ff88;
-  --green2:#00cc66;--green3:#008844;--dim:#2a4a2a;--text:#4a8a4a;
-  --amber:#ffaa00;--purple:#aa44ff;--red:#ff4444;--blue:#44aaff;
+  --bg:#0a0f0a;--panel:#131f13;--border:#2a5a2a;--green:#39ff88;
+  --green2:#22dd66;--green3:#15aa44;--dim:#2a5a2a;--text:#7acc7a;
+  --amber:#ffcc00;--purple:#cc66ff;--red:#ff5555;--blue:#55bbff;
 }
 html,body{background:var(--bg);min-height:100vh;overflow-x:hidden;}
 body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padding-bottom:40px;}
 
-/* HUD */
 .hud{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
 .hud-box{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px 8px;text-align:center;}
-.hud-label{font-size:9px;color:var(--text);letter-spacing:2px;}
+.hud-label{font-size:10px;color:var(--text);letter-spacing:2px;}
 .hud-val{font-size:18px;color:var(--green);font-family:'Orbitron',monospace;font-weight:700;margin-top:3px;word-break:break-all;}
-.hud-rate{font-size:10px;color:var(--green3);margin-top:2px;}
+.hud-rate{font-size:11px;color:var(--green3);margin-top:2px;}
 
-/* Title bar */
-.titlebar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;}
-.game-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:3px;color:var(--green);}
-.rebirth-badge{background:#1a0a2a;border:1px solid #6622aa;border-radius:10px;padding:2px 8px;font-size:10px;color:#cc88ff;display:none;}
+.titlebar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;}
+.game-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:900;letter-spacing:3px;color:var(--green);}
+.rebirth-badge{background:#1a0a2a;border:1px solid #8833cc;border-radius:10px;padding:2px 8px;font-size:10px;color:#dd99ff;display:none;}
 
-/* Resources */
+/* Pixel art panel */
+.pixel-panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:8px;display:flex;align-items:center;gap:10px;overflow:hidden;}
+.pixel-panel canvas{image-rendering:pixelated;border-radius:3px;flex-shrink:0;}
+.reactor-stats{flex:1;min-width:0;}
+.reactor-stat{font-size:10px;color:var(--text);line-height:1.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.reactor-stat span{color:var(--green);}
+
 .section-title{font-size:10px;color:var(--text);letter-spacing:2px;margin-bottom:6px;padding-left:2px;}
 .resources-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
-.res-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px 4px;text-align:center;cursor:pointer;transition:border-color .15s,transform .1s;position:relative;overflow:hidden;}
+.res-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px 4px;text-align:center;cursor:pointer;transition:border-color .15s,transform .1s;}
 .res-card:active{transform:scale(.96);}
 .res-card.active{border-color:var(--green);}
-.res-card.locked{opacity:.3;cursor:default;}
+.res-card.locked{opacity:.35;cursor:default;}
 .res-card.can-buy{border-color:var(--amber);}
 .res-icon{font-size:22px;line-height:1;}
-.res-name{font-size:8px;letter-spacing:1px;margin-top:3px;}
-.res-count{font-size:10px;color:var(--green);margin-top:2px;}
-.res-rate{font-size:9px;color:var(--green3);}
-.res-cost{font-size:9px;color:var(--amber);margin-top:2px;}
+.res-name{font-size:9px;letter-spacing:1px;margin-top:3px;color:var(--text);}
+.res-count{font-size:11px;color:var(--green);margin-top:2px;}
+.res-rate{font-size:10px;color:var(--green3);}
+.res-cost{font-size:10px;color:var(--amber);margin-top:2px;}
 .res-lock{font-size:8px;color:var(--dim);margin-top:2px;}
-.mini-bar{height:3px;background:var(--dim);border-radius:2px;margin-top:4px;overflow:hidden;}
+.mini-bar{height:3px;background:#1a3a1a;border-radius:2px;margin-top:4px;overflow:hidden;}
 .mini-fill{height:100%;background:var(--green3);border-radius:2px;transition:width .3s;}
 
-/* Tabs */
 .tabs{display:flex;gap:4px;margin-bottom:8px;}
-.tab{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:5px;padding:8px 4px;text-align:center;font-size:9px;letter-spacing:1px;cursor:pointer;color:var(--text);font-family:'Share Tech Mono',monospace;}
-.tab.active{border-color:var(--green);color:var(--green);background:#0d1a0d;}
+.tab{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:5px;padding:8px 4px;text-align:center;font-size:10px;letter-spacing:1px;cursor:pointer;color:var(--text);font-family:'Share Tech Mono',monospace;}
+.tab.active{border-color:var(--green);color:var(--green);background:#0d1f0d;}
 
-/* Upgrades */
 .upg-list{display:flex;flex-direction:column;gap:6px;}
 .upg-btn{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px;cursor:pointer;transition:all .15s;text-align:left;width:100%;font-family:'Share Tech Mono',monospace;}
 .upg-btn:active{transform:scale(.98);}
 .upg-btn.affordable{border-color:var(--green2);}
-.upg-btn.bought{border-color:#111;opacity:.4;cursor:default;}
-.upg-name{font-size:11px;color:var(--green);}
+.upg-name{font-size:12px;color:var(--green);}
 .upg-desc{font-size:10px;color:var(--text);margin-top:2px;line-height:1.4;}
-.upg-cost{font-size:10px;color:var(--amber);margin-top:4px;}
+.upg-cost{font-size:11px;color:var(--amber);margin-top:4px;}
 .upg-empty{font-size:11px;color:var(--dim);text-align:center;padding:20px 0;line-height:1.8;}
 
-/* Research */
 .research-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .res-research{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px;cursor:pointer;transition:border-color .15s;}
 .res-research:active{transform:scale(.97);}
 .res-research.affordable{border-color:var(--amber);}
-.res-research.done{border-color:#111;opacity:.5;cursor:default;}
-.rr-name{font-size:10px;color:var(--green);}
+.res-research.done{border-color:#1a3a1a;opacity:.55;cursor:default;}
+.rr-name{font-size:11px;color:var(--green);}
 .rr-eff{font-size:10px;color:var(--amber);margin-top:3px;}
-.rr-cost{font-size:9px;color:var(--text);margin-top:4px;}
+.rr-cost{font-size:10px;color:var(--text);margin-top:4px;}
 
-/* Rebirth */
-.rebirth-panel{background:#0a070f;border:1px solid #3a1a5a;border-radius:8px;padding:12px;}
-.rebirth-header{font-family:'Orbitron',monospace;font-size:12px;color:#aa44ff;letter-spacing:2px;margin-bottom:10px;}
-.rebirth-info{font-size:11px;color:#7744aa;line-height:1.8;margin-bottom:12px;}
-.rebirth-info span{color:#cc88ff;}
-.rebirth-btn{background:#0f0a1a;border:2px solid #6622aa;border-radius:6px;padding:12px;width:100%;cursor:pointer;color:#cc88ff;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
+.rebirth-panel{background:#0c0814;border:1px solid #4a1a7a;border-radius:8px;padding:12px;}
+.rebirth-header{font-family:'Orbitron',monospace;font-size:12px;color:#cc66ff;letter-spacing:2px;margin-bottom:10px;}
+.rebirth-info{font-size:11px;color:#9966bb;line-height:1.9;margin-bottom:12px;}
+.rebirth-info span{color:#dd99ff;}
+.rebirth-btn{background:#0f0a1a;border:2px solid #7733bb;border-radius:6px;padding:12px;width:100%;cursor:pointer;color:#cc88ff;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:1px;transition:all .2s;}
 .rebirth-btn:active{transform:scale(.97);}
-.rebirth-btn.ready{border-color:#aa44ff;color:#ff88ff;background:#150a25;}
+.rebirth-btn.ready{border-color:#cc66ff;color:#ff99ff;background:#180a28;}
 .rebirth-progress{height:6px;background:#1a0a2a;border-radius:3px;margin:10px 0;overflow:hidden;}
-.rebirth-prog-fill{height:100%;background:linear-gradient(90deg,#6622aa,#aa44ff);border-radius:3px;transition:width .3s;}
-.rebirth-history{font-size:10px;color:#5533aa;margin-top:10px;line-height:1.7;}
+.rebirth-prog-fill{height:100%;background:linear-gradient(90deg,#7733bb,#cc66ff);border-radius:3px;transition:width .3s;}
+.rebirth-history{font-size:10px;color:#664488;margin-top:10px;line-height:1.7;}
 
-/* Notification */
-.notif{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#001a0d;border:1px solid var(--green);border-radius:20px;padding:6px 16px;font-size:11px;color:var(--green);pointer-events:none;opacity:0;transition:opacity .3s;z-index:100;white-space:nowrap;max-width:90vw;}
+.notif{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#001f0d;border:1px solid var(--green);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green);pointer-events:none;opacity:0;transition:opacity .3s;z-index:100;white-space:nowrap;max-width:90vw;}
 
-/* Ticker */
-.ticker{font-size:9px;color:var(--dim);text-align:center;margin-top:10px;letter-spacing:1px;animation:blink 3s ease-in-out infinite;}
-@keyframes blink{0%,100%{opacity:.5}50%{opacity:1}}
+.ticker{font-size:10px;color:var(--green3);text-align:center;margin-top:10px;letter-spacing:1px;opacity:.7;}
 
-/* Scanline overlay */
-body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,.015) 2px,rgba(0,255,136,.015) 4px);pointer-events:none;z-index:0;}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(57,255,136,.012) 2px,rgba(57,255,136,.012) 4px);pointer-events:none;z-index:0;}
 body>*{position:relative;z-index:1;}
 </style>
 </head>
@@ -102,14 +97,14 @@ body>*{position:relative;z-index:1;}
   <div class="game-title">⚛ NUCLEAR TYCOON</div>
   <div style="display:flex;align-items:center;gap:6px;">
     <div class="rebirth-badge" id="rbadge"></div>
-    <button onclick="saveGame();notify('💾 Guardado!')" style="background:#0d1a0d;border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 7px;cursor:pointer;letter-spacing:1px;">GUARDAR</button>
-    <button onclick="resetGame()" style="background:#1a0d0d;border:1px solid #3a1a1a;border-radius:4px;color:#664444;font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 7px;cursor:pointer;letter-spacing:1px;">RESET</button>
+    <button onclick="saveGame();notify('💾 Guardado!')" style="background:#0d1f0d;border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 8px;cursor:pointer;letter-spacing:1px;">GUARDAR</button>
+    <button onclick="resetGame()" style="background:#1f0d0d;border:1px solid #5a1a1a;border-radius:4px;color:#aa5555;font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 8px;cursor:pointer;letter-spacing:1px;">RESET</button>
   </div>
 </div>
 
 <div class="hud">
   <div class="hud-box">
-    <div class="hud-label">CRÉDITOS</div>
+    <div class="hud-label">USD</div>
     <div class="hud-val" id="hud-money">$0</div>
     <div class="hud-rate" id="hud-rate">+$0/s</div>
   </div>
@@ -120,7 +115,19 @@ body>*{position:relative;z-index:1;}
   </div>
 </div>
 
-<div class="section-title">FUENTES DE ENERGÍA</div>
+<!-- Pixel art reactor panel -->
+<div class="pixel-panel">
+  <canvas id="reactor-canvas" width="80" height="80"></canvas>
+  <div class="reactor-stats">
+    <div class="reactor-stat">REACTOR: <span id="stat-status">OPERATIVO</span></div>
+    <div class="reactor-stat">TEMP NÚCLEO: <span id="stat-temp">285°C</span></div>
+    <div class="reactor-stat">NEUTRONES: <span id="stat-neutrons">NOMINAL</span></div>
+    <div class="reactor-stat">EFICIENCIA: <span id="stat-eff">98.3%</span></div>
+    <div class="reactor-stat">REBIRTHS: <span id="stat-reb">0</span> | MULT: <span id="stat-mult">x1.00</span></div>
+  </div>
+</div>
+
+<div class="section-title">FUENTES DE ENERGÍA — tocá para comprar</div>
 <div class="resources-grid" id="res-grid"></div>
 
 <div class="tabs">
@@ -150,9 +157,10 @@ body>*{position:relative;z-index:1;}
 <div class="ticker" id="ticker">Inicializando reactor principal...</div>
 
 <script>
-const REBIRTH_COST = 50000;
+const REBIRTH_COST = 500000000; // 500 millones
 
 const FMT = n => {
+  if(n>=1e18) return '$'+(n/1e18).toFixed(2)+'Qi';
   if(n>=1e15) return '$'+(n/1e15).toFixed(2)+'Q';
   if(n>=1e12) return '$'+(n/1e12).toFixed(2)+'T';
   if(n>=1e9)  return '$'+(n/1e9).toFixed(2)+'B';
@@ -161,6 +169,7 @@ const FMT = n => {
   return '$'+Math.floor(n);
 };
 const FMTN = n => {
+  if(n>=1e12) return (n/1e12).toFixed(1)+'T';
   if(n>=1e9)  return (n/1e9).toFixed(1)+'B';
   if(n>=1e6)  return (n/1e6).toFixed(1)+'M';
   if(n>=1e3)  return (n/1e3).toFixed(1)+'K';
@@ -168,103 +177,104 @@ const FMTN = n => {
 };
 
 const RESOURCES = [
-  {id:'uranium',   name:'URANIO',   icon:'⚛',  base:1,    baseCost:10,    unlockAt:0,      desc:'U-235 enriquecido'},
-  {id:'plutonium', name:'PLUT.',    icon:'☢',  base:6,    baseCost:500,   unlockAt:200,    desc:'Pu-239 generado'},
-  {id:'thorium',   name:'TORIO',   icon:'⬡',  base:18,   baseCost:5000,  unlockAt:2000,   desc:'Ciclo Th-232'},
-  {id:'fusion',    name:'FUSIÓN',  icon:'✦',  base:60,   baseCost:50000, unlockAt:20000,  desc:'Plasma D-T'},
-  {id:'antimatter',name:'ANTIMAT.',icon:'⊕',  base:300,  baseCost:1e6,   unlockAt:500000, desc:'Antiprotones'},
-  {id:'darkfuel',  name:'OSCURO',  icon:'◈',  base:3000, baseCost:1e8,   unlockAt:1e7,    desc:'Energía oscura'},
+  {id:'uranium',    name:'URANIO',   icon:'⚛',  base:1,      baseCost:10,     unlockAt:0,       desc:'U-235 enriquecido'},
+  {id:'plutonium',  name:'PLUT.',    icon:'☢',  base:6,      baseCost:500,    unlockAt:200,     desc:'Pu-239 generado'},
+  {id:'thorium',    name:'TORIO',    icon:'⬡',  base:18,     baseCost:5000,   unlockAt:2000,    desc:'Ciclo Th-232'},
+  {id:'fusion',     name:'FUSIÓN',   icon:'✦',  base:60,     baseCost:50000,  unlockAt:20000,   desc:'Plasma D-T'},
+  {id:'antimatter', name:'ANTIMAT.', icon:'⊕',  base:300,    baseCost:1e6,    unlockAt:500000,  desc:'Antiprotones'},
+  {id:'darkfuel',   name:'OSCURO',   icon:'◈',  base:3000,   baseCost:1e8,    unlockAt:1e7,     desc:'Energía oscura'},
+  {id:'quantum',    name:'QUÁNTUM',  icon:'⟁',  base:25000,  baseCost:5e9,    unlockAt:1e9,     desc:'Vacío cuántico'},
 ];
 
 const UPGRADES = [
-  {id:'u1', name:'Varillas de control',      desc:'Estabiliza el reactor principal',         cost:100,    eff:()=>{G.rm.uranium*=2},       req:()=>G.earned>=50},
-  {id:'u2', name:'Centrífuga avanzada',      desc:'Enriquecimiento al 20% U-235',            cost:800,    eff:()=>{G.rm.uranium*=3},        req:()=>G.earned>=400},
-  {id:'u3', name:'Agua pesada D₂O',          desc:'Moderador de neutrones mejorado',         cost:5000,   eff:()=>{G.rm.uranium*=4;G.rm.plutonium*=2}, req:()=>G.earned>=2000},
-  {id:'u4', name:'Ciclo de combustible',     desc:'Reciclaje de material fisionable',        cost:25000,  eff:()=>{G.rm.plutonium*=4},      req:()=>G.earned>=10000},
-  {id:'u5', name:'Blanket de torio',         desc:'Manto reproductor Th-232→U-233',          cost:100000, eff:()=>{G.rm.thorium*=3},        req:()=>G.earned>=50000},
-  {id:'u6', name:'Plasma confinado',         desc:'Tokamak: confinamiento magnético',        cost:500000, eff:()=>{G.rm.fusion*=3},         req:()=>G.earned>=200000},
-  {id:'u7', name:'Superconductores HTS',     desc:'Magnetos de alta temperatura crítica',    cost:2e6,    eff:()=>{G.rm.fusion*=5;G.rm.thorium*=2}, req:()=>G.earned>=1e6},
-  {id:'u8', name:'Trampa de Penning',        desc:'Campo magnético para antimateria',        cost:2e7,    eff:()=>{G.rm.antimatter*=3},     req:()=>G.earned>=1e7},
-  {id:'u9', name:'Colisionador cuántico',    desc:'Producción masiva de antiprotones',       cost:2e8,    eff:()=>{G.rm.antimatter*=6},     req:()=>G.earned>=1e8},
-  {id:'u10',name:'Singularidad oscura',      desc:'Aprovecha la energía del vacío cuántico', cost:2e9,    eff:()=>{G.rm.darkfuel*=5;G.gm*=2}, req:()=>G.earned>=1e9},
-  {id:'u11',name:'Reacción en cadena',       desc:'Fisión autocatalítica controlada',        cost:1e4,    eff:()=>{G.gm*=1.5},              req:()=>G.earned>=5000},
-  {id:'u12',name:'Ley de Coulomb nuclear',   desc:'Reducción de barrera de fusión',          cost:5e5,    eff:()=>{G.gm*=2},                req:()=>G.earned>=300000},
+  // Early game
+  {id:'u1',  name:'Varillas de control',       desc:'Estabiliza el reactor de uranio',             cost:100,    eff:()=>{G.rm.uranium*=2},                      req:()=>G.earned>=50},
+  {id:'u2',  name:'Centrífuga avanzada',        desc:'Enriquecimiento al 20% de U-235',             cost:800,    eff:()=>{G.rm.uranium*=3},                      req:()=>G.earned>=400},
+  {id:'u11', name:'Reacción en cadena',         desc:'Fisión autocatalítica controlada +50% global', cost:8000,   eff:()=>{G.gm*=1.5},                            req:()=>G.earned>=4000},
+  {id:'u3',  name:'Agua pesada D₂O',            desc:'Moderador de neutrones mejorado',             cost:5000,   eff:()=>{G.rm.uranium*=4;G.rm.plutonium*=2},    req:()=>G.earned>=2000},
+  {id:'u4',  name:'Ciclo de combustible MOX',   desc:'Reciclaje de Pu en reactor térmico',          cost:25000,  eff:()=>{G.rm.plutonium*=4},                    req:()=>G.earned>=10000},
+  // Mid game
+  {id:'u5',  name:'Blanket de torio',           desc:'Manto reproductor Th-232 → U-233',            cost:100000, eff:()=>{G.rm.thorium*=3},                      req:()=>G.earned>=50000},
+  {id:'u12', name:'Ley de Coulomb nuclear',     desc:'Reducción de barrera coulombiana +2x global', cost:500000, eff:()=>{G.gm*=2},                              req:()=>G.earned>=200000},
+  {id:'u6',  name:'Plasma confinado',           desc:'Tokamak: confinamiento magnético D-T',        cost:600000, eff:()=>{G.rm.fusion*=3},                       req:()=>G.earned>=250000},
+  {id:'u13', name:'Refrigeración sódica',       desc:'Reactor rápido refrigerado con Na líquido',   cost:1e6,    eff:()=>{G.rm.plutonium*=3;G.rm.thorium*=2},   req:()=>G.earned>=500000},
+  {id:'u7',  name:'Superconductores HTS',       desc:'Magnetos de alta temperatura crítica',        cost:2e6,    eff:()=>{G.rm.fusion*=5;G.rm.thorium*=2},       req:()=>G.earned>=1e6},
+  // Late game
+  {id:'u14', name:'Espejo magnético',           desc:'Configuración alternativa de confinamiento',  cost:8e6,    eff:()=>{G.rm.fusion*=4},                       req:()=>G.earned>=4e6},
+  {id:'u8',  name:'Trampa de Penning',          desc:'Campo magnético para captura de antimateria', cost:2e7,    eff:()=>{G.rm.antimatter*=3},                   req:()=>G.earned>=1e7},
+  {id:'u15', name:'Acelerador lineal LINAC',    desc:'Produce haces de partículas de alta energía', cost:5e7,    eff:()=>{G.rm.antimatter*=4;G.gm*=1.5},         req:()=>G.earned>=3e7},
+  {id:'u9',  name:'Colisionador cuántico',      desc:'Producción masiva de antiprotones',           cost:2e8,    eff:()=>{G.rm.antimatter*=6},                   req:()=>G.earned>=1e8},
+  {id:'u16', name:'Condensado Bose-Einstein',   desc:'Materia en estado cuántico coherente',        cost:8e8,    eff:()=>{G.rm.darkfuel*=3;G.rm.quantum*=2},     req:()=>G.earned>=5e8},
+  {id:'u10', name:'Singularidad oscura',        desc:'Aprovecha la energía del vacío cuántico',     cost:2e9,    eff:()=>{G.rm.darkfuel*=5;G.gm*=2},             req:()=>G.earned>=1e9},
+  {id:'u17', name:'Reactor de antimateria',     desc:'Aniquilación p-p̄ controlada, +8x antimat.',  cost:1e10,   eff:()=>{G.rm.antimatter*=8;G.rm.darkfuel*=3},  req:()=>G.earned>=5e9},
+  {id:'u18', name:'Fluctuación del vacío',      desc:'Extrae energía ZPE del campo cuántico',       cost:5e10,   eff:()=>{G.rm.quantum*=5;G.gm*=2},              req:()=>G.earned>=2e10},
+  {id:'u19', name:'Cuerdas de energía oscura',  desc:'Tensión de brana en 11 dimensiones',          cost:5e11,   eff:()=>{G.gm*=5},                              req:()=>G.earned>=1e11},
+  {id:'u20', name:'Horizonte de Hawking',       desc:'Radiación de agujeros negros miniatura',      cost:1e13,   eff:()=>{G.gm*=10},                             req:()=>G.earned>=5e12},
 ];
 
 const RESEARCH = [
-  {id:'r1', name:'Fisión controlada',   eff:'+20% U/Pu',        cost:300,    fx:()=>{G.rm.uranium*=1.2;G.rm.plutonium*=1.2}},
-  {id:'r2', name:'Decaimiento beta',    eff:'+30% todo',        cost:2000,   fx:()=>{G.gm*=1.3}},
-  {id:'r3', name:'Espectroscopía γ',    eff:'+50% Torio',       cost:10000,  fx:()=>{G.rm.thorium*=1.5}},
-  {id:'r4', name:'Inyección pellets',   eff:'+2x Fusión',       cost:80000,  fx:()=>{G.rm.fusion*=2}},
-  {id:'r5', name:'Ley de Faraday',      eff:'+40% global',      cost:300000, fx:()=>{G.gm*=1.4}},
-  {id:'r6', name:'Maxwell unificado',   eff:'+2x global',       cost:2e6,    fx:()=>{G.gm*=2}},
-  {id:'r7', name:'Antimat. estable',    eff:'+3x Antimat.',     cost:2e7,    fx:()=>{G.rm.antimatter*=3}},
-  {id:'r8', name:'Gravedad cuántica',   eff:'+5x Oscuro',       cost:5e8,    fx:()=>{G.rm.darkfuel*=5}},
-  {id:'r9', name:'Cámara de burbujas',  eff:'+25% global',      cost:500,    fx:()=>{G.gm*=1.25}},
-  {id:'r10',name:'Neutrinos lentos',    eff:'+60% U+Pu',        cost:20000,  fx:()=>{G.rm.uranium*=1.6;G.rm.plutonium*=1.6}},
+  {id:'r1',  name:'Fisión controlada',     eff:'+20% U+Pu',          cost:300,    fx:()=>{G.rm.uranium*=1.2;G.rm.plutonium*=1.2}},
+  {id:'r9',  name:'Cámara de burbujas',    eff:'+25% global',         cost:500,    fx:()=>{G.gm*=1.25}},
+  {id:'r2',  name:'Decaimiento beta',      eff:'+30% todo',           cost:2000,   fx:()=>{G.gm*=1.3}},
+  {id:'r10', name:'Neutrinos lentos',      eff:'+60% U+Pu',           cost:20000,  fx:()=>{G.rm.uranium*=1.6;G.rm.plutonium*=1.6}},
+  {id:'r3',  name:'Espectroscopía γ',      eff:'+50% torio',          cost:10000,  fx:()=>{G.rm.thorium*=1.5}},
+  {id:'r4',  name:'Inyección pellets',     eff:'+2x fusión',          cost:80000,  fx:()=>{G.rm.fusion*=2}},
+  {id:'r5',  name:'Ley de Faraday',        eff:'+40% global',         cost:300000, fx:()=>{G.gm*=1.4}},
+  {id:'r11', name:'Ecuaciones de Dirac',   eff:'+2x antimateria',     cost:800000, fx:()=>{G.rm.antimatter*=2}},
+  {id:'r6',  name:'Maxwell unificado',     eff:'+2x global',          cost:2e6,    fx:()=>{G.gm*=2}},
+  {id:'r7',  name:'Antimateria estable',   eff:'+3x antimat.',        cost:2e7,    fx:()=>{G.rm.antimatter*=3}},
+  {id:'r12', name:'Teoría de cuerdas M',   eff:'+3x oscuro+quántum',  cost:1e8,    fx:()=>{G.rm.darkfuel*=3;G.rm.quantum*=3}},
+  {id:'r8',  name:'Gravedad cuántica',     eff:'+5x oscuro',          cost:5e8,    fx:()=>{G.rm.darkfuel*=5}},
+  {id:'r13', name:'Holografía cuántica',   eff:'+3x global',          cost:5e9,    fx:()=>{G.gm*=3}},
+  {id:'r14', name:'Paradoja de información',eff:'+5x todo',           cost:1e11,   fx:()=>{G.gm*=5}},
 ];
 
 const TICKERS = [
-  'Reactor N°1 operando al 98.3%...','Temperatura núcleo: 15.000.000 °C...','Neutrones térmicos en rango nominal...','Enriquecimiento U-235: 3.7%...','Circuito de refrigeración primario activo...','Red eléctrica sincronizada a 50 Hz...','Barras de control en posición óptima...','Monitor Geiger-Müller: niveles normales...','Sistema de seguridad SCRAM listo...','Turbinas de vapor girando a 3000 rpm...','Presión del vapor: 70 bar nominal...','Agua pesada: temperatura 285°C...',
+  'Reactor N°1 operando al 98.3%...','Temperatura núcleo: 15.000.000 °C...','Neutrones térmicos en rango nominal...','Enriquecimiento U-235: 3.7%...','Circuito de refrigeración primario activo...','Red eléctrica sincronizada a 50 Hz...','Barras de control en posición óptima...','Monitor Geiger-Müller: niveles normales...','Sistema de seguridad SCRAM listo...','Turbinas de vapor girando a 3000 rpm...','Presión del vapor: 70 bar nominal...','Agua pesada: temperatura 285°C...','Inspección OIEA: todo en orden...','Rendimiento turbogenerador: 99.1%...',
 ];
 
-// Game state
 let G = {
   money:0, earned:0, energy:0,
   rebirths:0, rbMult:1,
-  rm:{uranium:1,plutonium:1,thorium:1,fusion:1,antimatter:1,darkfuel:1},
+  rm:{uranium:1,plutonium:1,thorium:1,fusion:1,antimatter:1,darkfuel:1,quantum:1},
   gm:1,
-  owned:{uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0},
+  owned:{uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0,quantum:0},
   upgBought:[],
   resDone:[],
   lastSave: Date.now(),
 };
 
-const SAVE_KEY = 'nuclear_tycoon_v1';
+const SAVE_KEY = 'nuclear_tycoon_v2';
 
 function saveGame(){
-  try{
-    localStorage.setItem(SAVE_KEY, JSON.stringify({...G, lastSave: Date.now()}));
-  }catch(e){}
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({...G, lastSave:Date.now()})); }catch(e){}
 }
 
 function loadGame(){
   try{
     const raw = localStorage.getItem(SAVE_KEY);
     if(!raw) return;
-    const saved = JSON.parse(raw);
-    // Merge saved into G safely
-    G.money    = saved.money    || 0;
-    G.earned   = saved.earned   || 0;
-    G.energy   = saved.energy   || 0;
-    G.rebirths = saved.rebirths || 0;
-    G.rbMult   = saved.rbMult   || 1;
-    G.gm       = saved.gm       || 1;
-    G.rm       = Object.assign({uranium:1,plutonium:1,thorium:1,fusion:1,antimatter:1,darkfuel:1}, saved.rm||{});
-    G.owned    = Object.assign({uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0}, saved.owned||{});
-    G.upgBought = saved.upgBought || [];
-    G.resDone   = saved.resDone   || [];
-    G.lastSave  = saved.lastSave  || Date.now();
-
-    // Re-apply upgrades effects so multipliers are correct
-    G.rm = {uranium:1,plutonium:1,thorium:1,fusion:1,antimatter:1,darkfuel:1};
-    G.gm = 1;
-    G.upgBought.forEach(id=>{
-      const u = UPGRADES.find(x=>x.id===id);
-      if(u) u.eff();
-    });
-    G.resDone.forEach(id=>{
-      const r = RESEARCH.find(x=>x.id===id);
-      if(r) r.fx();
-    });
-
-    // Offline earnings (max 4 hours)
-    const offlineSecs = Math.min((Date.now() - G.lastSave) / 1000, 4*3600);
-    if(offlineSecs > 10){
-      const offlineIncome = totalRate() * offlineSecs;
-      G.money  += offlineIncome;
-      G.earned += offlineIncome;
-      setTimeout(()=>notify('⏱ Offline: +'+FMT(offlineIncome)+' ganados'), 800);
+    const s = JSON.parse(raw);
+    G.money    = s.money    || 0;
+    G.earned   = s.earned   || 0;
+    G.energy   = s.energy   || 0;
+    G.rebirths = s.rebirths || 0;
+    G.rbMult   = s.rbMult   || 1;
+    G.gm       = 1;
+    G.rm       = {uranium:1,plutonium:1,thorium:1,fusion:1,antimatter:1,darkfuel:1,quantum:1};
+    G.owned    = Object.assign({uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0,quantum:0}, s.owned||{});
+    G.upgBought = s.upgBought || [];
+    G.resDone   = s.resDone   || [];
+    G.lastSave  = s.lastSave  || Date.now();
+    // Re-apply effects
+    G.upgBought.forEach(id=>{ const u=UPGRADES.find(x=>x.id===id); if(u) u.eff(); });
+    G.resDone.forEach(id=>{ const r=RESEARCH.find(x=>x.id===id); if(r) r.fx(); });
+    // Offline income (max 8 hours)
+    const offSecs = Math.min((Date.now()-G.lastSave)/1000, 8*3600);
+    if(offSecs > 10){
+      const inc = totalRate()*offSecs;
+      G.money+=inc; G.earned+=inc;
+      setTimeout(()=>notify('⏱ Offline +'+FMT(inc)+' ganados'),800);
     }
   }catch(e){}
 }
@@ -288,57 +298,145 @@ function nextCost(r){
 
 let lastTick=Date.now();
 function tick(){
-  const now=Date.now(),dt=(now-lastTick)/1000;lastTick=now;
+  const now=Date.now(),dt=(now-lastTick)/1000; lastTick=now;
   const inc=totalRate()*dt;
-  G.money+=inc;G.earned+=inc;G.energy+=totalEnergy()*dt;
+  G.money+=inc; G.earned+=inc; G.energy+=totalEnergy()*dt;
   document.getElementById('hud-money').textContent=FMT(G.money);
   document.getElementById('hud-rate').textContent='+'+FMT(totalRate())+'/s';
   document.getElementById('hud-energy').textContent=FMTN(G.energy)+' MW';
   document.getElementById('hud-erate').textContent='+'+FMTN(totalEnergy())+'/s';
+  // Update pixel panel stats
+  document.getElementById('stat-temp').textContent=Math.floor(285+totalRate()*0.001)+'°C';
+  document.getElementById('stat-neutrons').textContent=totalRate()>1e6?'CRÍTICO':'NOMINAL';
+  document.getElementById('stat-eff').textContent=(98+G.rebirths*0.1).toFixed(1)+'%';
+  document.getElementById('stat-reb').textContent=G.rebirths;
+  document.getElementById('stat-mult').textContent='x'+G.rbMult.toFixed(2);
+  drawReactor();
 }
 
 function buyRes(id){
   const r=RESOURCES.find(x=>x.id===id);
-  if(!r)return;
+  if(!r) return;
   const cost=nextCost(r);
-  if(G.money<cost)return;
+  if(G.money<cost) return;
   G.money-=cost;
   G.owned[id]=(G.owned[id]||0)+1;
   notify('+1 '+r.name);
-  renderResGrid();
-  renderUpgrades();
+  renderResGrid(); renderUpgrades();
 }
 
 function buyUpg(id){
   const u=UPGRADES.find(x=>x.id===id);
-  if(!u||G.upgBought.includes(id))return;
-  if(G.money<u.cost)return;
-  G.money-=u.cost;G.upgBought.push(id);u.eff();
+  if(!u||G.upgBought.includes(id)) return;
+  if(G.money<u.cost) return;
+  G.money-=u.cost; G.upgBought.push(id); u.eff();
   notify(u.name+' activado ✓');
   renderUpgrades();
 }
 
 function buyResearch(id){
   const r=RESEARCH.find(x=>x.id===id);
-  if(!r||G.resDone.includes(id))return;
-  if(G.money<r.cost)return;
-  G.money-=r.cost;G.resDone.push(id);r.fx();
-  notify('Investigación: '+r.name);
+  if(!r||G.resDone.includes(id)) return;
+  if(G.money<r.cost) return;
+  G.money-=r.cost; G.resDone.push(id); r.fx();
+  notify('Lab: '+r.name+' completado');
   renderResearch();
 }
 
 function doRebirth(){
   if(G.earned<REBIRTH_COST){notify('Necesitás '+FMT(REBIRTH_COST)+' para Rebirth');return;}
-  const bonus=1+(G.rebirths*0.5+0.5);
-  G.rebirths++;G.rbMult*=bonus;
-  G.money=0;G.earned=0;G.energy=0;
-  G.rm={uranium:1,plutonium:1,thorium:1,fusion:1,antimatter:1,darkfuel:1};
-  G.gm=1;G.upgBought=[];G.resDone=[];
-  G.owned={uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0};
-  notify('⬡ REBIRTH! Multiplicador x'+bonus.toFixed(1)+' aplicado');
-  renderAll();renderRebirth();
+  const bonus = 1.10; // +10% fijo por cada rebirth
+  G.rebirths++;
+  G.rbMult *= bonus;
+  G.money=0; G.earned=0; G.energy=0;
+  G.rm={uranium:1,plutonium:1,thorium:1,fusion:1,antimatter:1,darkfuel:1,quantum:1};
+  G.gm=1; G.upgBought=[]; G.resDone=[];
+  G.owned={uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0,quantum:0};
+  saveGame();
+  notify('⬡ REBIRTH #'+G.rebirths+' — ahora x'+G.rbMult.toFixed(2));
+  renderAll(); renderRebirth();
 }
 
+// ── PIXEL ART REACTOR ─────────────────────────────────────────────
+let reactorFrame=0;
+function drawReactor(){
+  const c=document.getElementById('reactor-canvas');
+  const ctx=c.getContext('2d');
+  const W=80,H=80;
+  ctx.fillStyle='#0a0f0a';
+  ctx.fillRect(0,0,W,H);
+  const f=reactorFrame;
+  // Core glow pulse
+  const pulse=0.5+0.5*Math.sin(f*0.12);
+  const rebColor = G.rebirths>0 ? `rgba(180,80,255,${0.15+pulse*0.25})` : `rgba(0,255,120,${0.15+pulse*0.25})`;
+  ctx.fillStyle=rebColor;
+  ctx.beginPath(); ctx.arc(40,38,14+pulse*3,0,Math.PI*2); ctx.fill();
+
+  // Reactor vessel (outer shell)
+  ctx.strokeStyle='#2a7a2a'; ctx.lineWidth=2;
+  ctx.strokeRect(18,10,44,56);
+  ctx.strokeStyle='#1a4a1a'; ctx.lineWidth=1;
+  ctx.strokeRect(22,14,36,48);
+
+  // Core center
+  const coreColor = G.rebirths>0 ? '#cc66ff' : '#39ff88';
+  ctx.fillStyle=coreColor;
+  ctx.fillRect(34,32,12,12);
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(38,36,4,4);
+
+  // Control rods (animated)
+  ctx.fillStyle='#888';
+  for(let i=0;i<3;i++){
+    const rodY = 14 + (Math.sin(f*0.08+i*1.2)*0.5+0.5)*8;
+    ctx.fillRect(28+i*10, rodY, 3, 18);
+  }
+
+  // Cooling pipes
+  ctx.strokeStyle='#0088aa'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(18,28); ctx.lineTo(5,28); ctx.lineTo(5,52); ctx.lineTo(18,52); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(62,28); ctx.lineTo(75,28); ctx.lineTo(75,52); ctx.lineTo(62,52); ctx.stroke();
+
+  // Coolant flow dots
+  ctx.fillStyle='#00aacc';
+  const flowPos=(f*2)%24;
+  ctx.fillRect(3,28+flowPos,3,3);
+  ctx.fillRect(73,52-flowPos,3,3);
+
+  // Steam turbine (top)
+  ctx.fillStyle='#334433';
+  ctx.fillRect(28,2,24,8);
+  ctx.fillStyle='#556655';
+  for(let i=0;i<4;i++) ctx.fillRect(30+i*6,3,4,6);
+
+  // Bottom foundation
+  ctx.fillStyle='#1a2a1a';
+  ctx.fillRect(14,66,52,8);
+  ctx.fillStyle='#2a3a2a';
+  for(let i=0;i<5;i++) ctx.fillRect(16+i*11,67,8,6);
+
+  // Warning lights
+  const warnOn=(f%20)<10;
+  ctx.fillStyle=warnOn?'#ff4444':'#330000';
+  ctx.beginPath(); ctx.arc(22,8,3,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=warnOn?'#ffcc00':'#332200';
+  ctx.beginPath(); ctx.arc(58,8,3,0,Math.PI*2); ctx.fill();
+
+  // Radiation symbol (small)
+  ctx.strokeStyle='rgba(57,255,136,0.4)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.arc(40,72,4,0,Math.PI*2); ctx.stroke();
+  ctx.beginPath();
+  for(let i=0;i<3;i++){
+    const a=i*Math.PI*2/3 - Math.PI/2;
+    ctx.moveTo(40+Math.cos(a)*2,72+Math.sin(a)*2);
+    ctx.lineTo(40+Math.cos(a)*4,72+Math.sin(a)*4);
+  }
+  ctx.stroke();
+
+  reactorFrame++;
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────
 function renderResGrid(){
   const el=document.getElementById('res-grid');
   el.innerHTML=RESOURCES.map(r=>{
@@ -363,7 +461,7 @@ function renderUpgrades(){
   const el=document.getElementById('upg-list');
   const avail=UPGRADES.filter(u=>!G.upgBought.includes(u.id)&&u.req());
   if(!avail.length){
-    el.innerHTML='<div class="upg-empty">Seguí generando energía<br>para desbloquear más mejoras<br><br>Ganado: '+FMT(G.earned)+'</div>';
+    el.innerHTML='<div class="upg-empty">Seguí generando para desbloquear más mejoras<br><br>Total ganado: '+FMT(G.earned)+'</div>';
     return;
   }
   el.innerHTML=avail.map(u=>{
@@ -392,18 +490,18 @@ function renderResearch(){
 function renderRebirth(){
   const can=G.earned>=REBIRTH_COST;
   const pct=Math.min(100,G.earned/REBIRTH_COST*100);
-  const next=1+(G.rebirths*0.5+0.5);
   document.getElementById('reb-info').innerHTML=
-    `Reiniciás el juego ganando un multiplicador PERMANENTE.<br>
+    `Reiniciás el juego ganando un <span>+10% permanente</span> de ingresos.<br>
     Multiplicador actual: <span>x${G.rbMult.toFixed(2)}</span><br>
-    Próximo bonus: <span>x${next.toFixed(1)}</span><br>
+    Próximo rebirth: <span>x${(G.rbMult*1.1).toFixed(2)}</span> (+10%)<br>
+    Requiere haber ganado: <span>${FMT(REBIRTH_COST)}</span><br>
     Progreso: <span>${FMT(G.earned)} / ${FMT(REBIRTH_COST)}</span>`;
   document.getElementById('reb-prog').style.width=pct+'%';
   const btn=document.getElementById('reb-btn');
   btn.className='rebirth-btn'+(can?' ready':'');
-  btn.textContent=can?`⬡ HACER REBIRTH (x${next.toFixed(1)})`:(`⬡ REBIRTH — faltan ${FMT(REBIRTH_COST-G.earned)}`);
+  btn.textContent=can?`⬡ HACER REBIRTH (+10%)`:`⬡ REBIRTH — faltan ${FMT(REBIRTH_COST-G.earned)}`;
   document.getElementById('reb-hist').innerHTML=G.rebirths>0?
-    `Rebirths: <span style="color:#cc88ff">${G.rebirths}</span> | Mult. total: <span style="color:#ff88ff">x${G.rbMult.toFixed(2)}</span>`:'';
+    `Rebirths: <span style="color:#dd99ff">${G.rebirths}</span> &nbsp;|&nbsp; Multiplicador acumulado: <span style="color:#ff99ff">x${G.rbMult.toFixed(2)}</span>`:'';
   const badge=document.getElementById('rbadge');
   if(G.rebirths>0){badge.style.display='inline-block';badge.textContent='⬡ x'+G.rebirths;}
   else badge.style.display='none';
@@ -414,16 +512,16 @@ function showTab(t){
     document.getElementById('view-'+id).style.display=id===t?'block':'none';
     document.getElementById('tab-'+id).className='tab'+(id===t?' active':'');
   });
-  if(t==='reb')renderRebirth();
-  if(t==='res')renderResearch();
-  if(t==='upg')renderUpgrades();
+  if(t==='reb') renderRebirth();
+  if(t==='res') renderResearch();
+  if(t==='upg') renderUpgrades();
 }
 
 let ntimer;
 function notify(msg){
   const el=document.getElementById('notif');
-  el.textContent=msg;el.style.opacity='1';
-  clearTimeout(ntimer);ntimer=setTimeout(()=>el.style.opacity='0',2000);
+  el.textContent=msg; el.style.opacity='1';
+  clearTimeout(ntimer); ntimer=setTimeout(()=>el.style.opacity='0',2200);
 }
 
 let tickerIdx=0;
@@ -439,7 +537,7 @@ setInterval(tick,80);
 setInterval(renderAll,900);
 setInterval(saveGame,15000);
 renderAll();
-setTimeout(()=>notify('💾 Partida cargada'),600);
+setTimeout(()=>notify('💾 Partida cargada — bienvenido de vuelta'),600);
 </script>
 </body>
 </html>
