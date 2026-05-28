@@ -104,6 +104,7 @@ body>*{position:relative;z-index:1;}
   <div class="game-title">&#9883; NUCLEAR TYCOON</div>
   <div style="display:flex;align-items:center;gap:6px;">
     <div class="rebirth-badge" id="rbadge"></div>
+    <button id="mute-btn" onclick="toggleMute()" style="background:#0d1a1f;border:1px solid #1a3a5a;border-radius:4px;color:#55aacc;font-family:'Share Tech Mono',monospace;font-size:11px;padding:3px 8px;cursor:pointer;">&#128266;</button>
     <button onclick="saveGame();notify('Guardado!')" style="background:#0d1f0d;border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 8px;cursor:pointer;letter-spacing:1px;">GUARDAR</button>
     <button onclick="resetGame()" style="background:#1f0d0d;border:1px solid #5a1a1a;border-radius:4px;color:#aa5555;font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 8px;cursor:pointer;letter-spacing:1px;">RESET</button>
   </div>
@@ -359,6 +360,7 @@ function checkMilestones(){
   MILESTONES.forEach(m=>{
     if(!G.stats.milestonesEarned.includes(m.id)&&m.req()){
       G.stats.milestonesEarned.push(m.id);
+      sfxMilestone();
       notify('Logro: '+m.name);
     }
   });
@@ -370,8 +372,10 @@ function buyRes(id){
   const cost=nextCost(r);
   if(G.money<cost) return;
   G.money-=cost;
+  const wasZero=(G.owned[id]||0)===0;
   G.owned[id]=(G.owned[id]||0)+1;
   G.stats.totalBought++;
+  if(wasZero) sfxUnlock(); else sfxBuy();
   notify('+1 '+r.name);
   renderResGrid(); renderUpgrades();
 }
@@ -382,6 +386,7 @@ function buyUpg(id){
   if(G.money<u.cost) return;
   G.money-=u.cost; G.upgBought.push(id); u.eff();
   G.stats.totalUpgrades++;
+  sfxUpgrade();
   notify(u.name+' activado');
   renderUpgrades();
 }
@@ -392,6 +397,7 @@ function buyResearch(id){
   if(G.money<r.cost) return;
   G.money-=r.cost; G.resDone.push(id); r.fx();
   G.stats.totalResearch++;
+  sfxResearch();
   notify('Lab: '+r.name+' completado');
   renderResearch();
 }
@@ -404,6 +410,7 @@ function doRebirth(){
   G.rm={uranium:1,plutonium:1,thorium:1,fusion:1,antimatter:1,darkfuel:1,quantum:1};
   G.gm=1; G.upgBought=[]; G.resDone=[];
   G.owned={uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0,quantum:0};
+  sfxRebirth();
   saveGame();
   notify('REBIRTH #'+G.rebirths+' ahora x'+G.rbMult.toFixed(2));
   renderAll(); renderRebirth();
@@ -603,6 +610,102 @@ function drawReactor(){
   }
   ctx.stroke();
   reactorFrame++;
+}
+
+// ── AUDIO ENGINE ─────────────────────────────────────────────────
+let _ctx = null;
+let _muted = false;
+
+function getAC(){
+  if(!_ctx) _ctx = new (window.AudioContext||window.webkitAudioContext)();
+  if(_ctx.state==='suspended') _ctx.resume();
+  return _ctx;
+}
+
+function toggleMute(){
+  _muted = !_muted;
+  document.getElementById('mute-btn').textContent = _muted ? '🔇' : '🔊';
+}
+
+// Utility: play a sequence of oscillator notes
+function playTone(notes, type='sine'){
+  if(_muted) return;
+  try{
+    const ac = getAC();
+    let t = ac.currentTime;
+    notes.forEach(([freq, dur, vol=0.18])=>{
+      const o = ac.createOscillator();
+      const g = ac.createGain();
+      o.connect(g); g.connect(ac.destination);
+      o.type = type;
+      o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(vol, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      o.start(t); o.stop(t + dur + 0.05);
+      t += dur * 0.55;
+    });
+  }catch(e){}
+}
+
+// Buy reactor — short low click + blip
+function sfxBuy(){
+  playTone([[120,0.08,0.15],[220,0.12,0.12]], 'square');
+}
+
+// Buy upgrade — ascending 3-note chime
+function sfxUpgrade(){
+  playTone([[330,0.12],[440,0.12],[660,0.18]], 'triangle');
+}
+
+// Buy research — deeper academic tone
+function sfxResearch(){
+  playTone([[220,0.15,0.12],[330,0.15,0.12],[440,0.2,0.15]], 'sine');
+}
+
+// Rebirth — dramatic low boom + rising sweep
+function sfxRebirth(){
+  if(_muted) return;
+  try{
+    const ac = getAC();
+    const t = ac.currentTime;
+
+    // Sub boom
+    const boom = ac.createOscillator();
+    const boomG = ac.createGain();
+    boom.connect(boomG); boomG.connect(ac.destination);
+    boom.type = 'sine';
+    boom.frequency.setValueAtTime(60, t);
+    boom.frequency.exponentialRampToValueAtTime(20, t+0.6);
+    boomG.gain.setValueAtTime(0.4, t);
+    boomG.gain.exponentialRampToValueAtTime(0.001, t+0.7);
+    boom.start(t); boom.stop(t+0.8);
+
+    // Rising sweep
+    const sweep = ac.createOscillator();
+    const sweepG = ac.createGain();
+    sweep.connect(sweepG); sweepG.connect(ac.destination);
+    sweep.type = 'sawtooth';
+    sweep.frequency.setValueAtTime(100, t+0.1);
+    sweep.frequency.exponentialRampToValueAtTime(800, t+1.0);
+    sweepG.gain.setValueAtTime(0, t+0.1);
+    sweepG.gain.linearRampToValueAtTime(0.15, t+0.3);
+    sweepG.gain.exponentialRampToValueAtTime(0.001, t+1.1);
+    sweep.start(t+0.1); sweep.stop(t+1.2);
+
+    // Final high ping
+    playTone([[880,0.3,0.2],[1320,0.4,0.25]], 'sine');
+  }catch(e){}
+}
+
+// Milestone / logro unlocked — celebratory 4-note
+function sfxMilestone(){
+  playTone([[440,0.1],[554,0.1],[659,0.1],[880,0.25,0.22]], 'triangle');
+}
+
+// Unlock new resource tier — ascending power chord
+function sfxUnlock(){
+  playTone([[220,0.15,0.2],[330,0.15,0.18],[440,0.2,0.2],[660,0.3,0.22]], 'triangle');
 }
 
 loadGame();
