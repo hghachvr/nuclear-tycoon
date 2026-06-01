@@ -120,8 +120,6 @@ body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padd
 .mute-knob{position:absolute;top:3px;left:3px;width:16px;height:16px;background:var(--dim);border-radius:50%;transition:all .2s;}
 .mute-toggle.on .mute-knob{left:23px;background:var(--green);}
 /* NOTIF */
-.notif{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#001f0d;border:1px solid var(--green);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green);pointer-events:none;opacity:0;transition:opacity .3s;z-index:100;white-space:nowrap;max-width:90vw;}
-.ticker{font-size:10px;color:var(--green3);text-align:center;margin-top:10px;letter-spacing:1px;opacity:.7;}
 /* BOOST */
 .boost-bar{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:8px;}
 .boost-btn{background:#0a1a0a;border:1px solid var(--green3);border-radius:5px;padding:6px 12px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--green);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s;}
@@ -134,6 +132,19 @@ body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padd
 .boost-timer.inactive{color:var(--dim);font-size:10px;}
 .boost-prog{height:3px;background:#1a3a1a;border-radius:2px;margin-top:4px;overflow:hidden;}
 .boost-prog-fill{height:100%;background:linear-gradient(90deg,var(--green3),var(--green));border-radius:2px;transition:width .5s;}
+/* INTERSTITIAL */
+.interstitial-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.interstitial-overlay.show{opacity:1;pointer-events:all;}
+.interstitial-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px 20px;width:88%;max-width:340px;text-align:center;}
+.interstitial-title{font-family:'Orbitron',monospace;font-size:14px;color:var(--purple);letter-spacing:2px;margin-bottom:6px;}
+.interstitial-sub{font-size:10px;color:var(--text);margin-bottom:16px;line-height:1.6;}
+.interstitial-ad-area{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:#333;font-size:10px;letter-spacing:2px;}
+.interstitial-skip{background:transparent;border:1px solid var(--dim);border-radius:6px;padding:10px 24px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);cursor:pointer;transition:all .2s;width:100%;}
+.interstitial-skip.ready{border-color:var(--green);color:var(--green);}
+.interstitial-skip:active{transform:scale(.97);}
+.interstitial-counter{font-size:9px;color:var(--dim);margin-top:8px;}
+.notif{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#001f0d;border:1px solid var(--green);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green);pointer-events:none;opacity:0;transition:opacity .3s;z-index:100;white-space:nowrap;max-width:90vw;}
+.ticker{font-size:10px;color:var(--green3);text-align:center;margin-top:10px;letter-spacing:1px;opacity:.7;}
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(57,255,136,.012) 2px,rgba(57,255,136,.012) 4px);pointer-events:none;z-index:0;}
 body>*{position:relative;z-index:1;}
 </style>
@@ -245,6 +256,17 @@ body>*{position:relative;z-index:1;}
   </div>
 </div>
 <div class="ticker" id="ticker">Initializing main reactor...</div>
+<div class="interstitial-overlay" id="interstitial-overlay">
+  <div class="interstitial-box">
+    <div class="interstitial-title" id="int-title">REBIRTH COMPLETE</div>
+    <div class="interstitial-sub" id="int-sub">Multiplier upgraded. A short message from our sponsors.</div>
+    <div class="interstitial-ad-area" id="int-ad-area">AD PLACEHOLDER</div>
+    <button class="interstitial-skip" id="int-skip-btn" onclick="closeInterstitial()">
+      <span id="int-skip-label">Please wait...</span>
+    </button>
+    <div class="interstitial-counter" id="int-counter"></div>
+  </div>
+</div>
 
 <script>
 // ── I18N ──────────────────────────────────────────────────────────
@@ -561,7 +583,7 @@ let G = {
   gm:1,
   owned:{uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0,quantum:0},
   upgBought:[], resDone:[],
-  boost:{ active:false, endsAt:0, cooldownUntil:0 },
+  boost:{active:false,endsAt:0,cooldownUntil:0},
   lastSave:Date.now(), lang:'en',
   stats:{
     totalPlayTime:0, allTimeEarned:0, totalBought:0, totalUpgrades:0,
@@ -589,8 +611,7 @@ function loadGame(){
     G.upgBought=s.upgBought||[]; G.resDone=s.resDone||[];
     G.lastSave=s.lastSave||Date.now();
     G.boost=Object.assign({active:false,endsAt:0,cooldownUntil:0},s.boost||{});
-    // If boost was active when saved, check if it's still valid
-    if(G.boost.endsAt && Date.now()>G.boost.endsAt) G.boost.active=false;
+    if(G.boost.endsAt&&Date.now()>G.boost.endsAt) G.boost.active=false;
     G.lang=s.lang||'en';
     G.stats=Object.assign({
       totalPlayTime:0,allTimeEarned:0,totalBought:0,totalUpgrades:0,
@@ -623,8 +644,8 @@ function resetGame(){
 // ── CALCULATIONS ──────────────────────────────────────────────────
 function rate(id){
   const r=RESOURCES.find(x=>x.id===id);
-  const boostMult = (G.boost.active && Date.now()<G.boost.endsAt) ? 3 : 1;
-  return r.base*(G.owned[id]||0)*(G.rm[id]||1)*G.gm*G.rbMult*boostMult;
+  const bm=(G.boost&&G.boost.active&&Date.now()<G.boost.endsAt)?3:1;
+  return r.base*(G.owned[id]||0)*(G.rm[id]||1)*G.gm*G.rbMult*bm;
 }
 function totalRate(){return RESOURCES.reduce((s,r)=>s+rate(r.id),0);}
 function totalEnergy(){return RESOURCES.reduce((s,r)=>s+rate(r.id)*r.base*0.04,0);}
@@ -652,7 +673,7 @@ function tick(){
   document.getElementById('stat-neutrons').textContent=totalRate()>1e6?T('critical'):T('nominal');
   document.getElementById('stat-eff').textContent=(98+G.rebirths*0.1).toFixed(1)+'%';
   document.getElementById('stat-reb').textContent=G.rebirths;
-  updateBoostUI();
+  if(typeof updateBoostUI==='function') updateBoostUI();
   document.getElementById('stat-mult').textContent='x'+G.rbMult.toFixed(2);
   drawReactor();
 }
@@ -720,6 +741,7 @@ function doRebirth(){
   saveGame();
   notify(T('reb_notif',G.rebirths,G.rbMult.toFixed(2)));
   renderAll(); renderRebirth();
+  showInterstitial();
 }
 
 // ── RENDER ────────────────────────────────────────────────────────
@@ -968,98 +990,125 @@ function sfxRebirth(){
   }catch(e){}
 }
 
+// ── INTERSTITIAL SYSTEM ───────────────────────────────────────────
+const INT_SKIP_DELAY = 5000;
+let _intTimer = null;
+
+function showInterstitial(){
+  const overlay=document.getElementById('interstitial-overlay');
+  const skipBtn=document.getElementById('int-skip-btn');
+  const skipLabel=document.getElementById('int-skip-label');
+  const counter=document.getElementById('int-counter');
+  const title=document.getElementById('int-title');
+  const sub=document.getElementById('int-sub');
+  title.textContent=lang==='es'?'REBIRTH COMPLETADO':'REBIRTH COMPLETE';
+  sub.textContent=lang==='es'
+    ?'Multiplicador actualizado. Un mensaje de nuestros sponsors.'
+    :'Multiplier upgraded. A short message from our sponsors.';
+  skipBtn.className='interstitial-skip';
+  skipLabel.textContent=lang==='es'?'Por favor espera...':'Please wait...';
+  counter.textContent='';
+  overlay.classList.add('show');
+  // ── ADMOB INTEGRATION POINT ──────────────────────────────────────
+  // Replace ad area with real AdMob interstitial:
+  //   AdMob.showInterstitial();
+  // Call closeInterstitial() in AdMob dismiss callback.
+  // ─────────────────────────────────────────────────────────────────
+  let rem=INT_SKIP_DELAY/1000;
+  counter.textContent=lang==='es'?`Podes cerrar en ${rem}s`:`You can close in ${rem}s`;
+  clearInterval(_intTimer);
+  _intTimer=setInterval(()=>{
+    rem--;
+    if(rem>0){
+      counter.textContent=lang==='es'?`Podes cerrar en ${rem}s`:`You can close in ${rem}s`;
+    } else {
+      clearInterval(_intTimer);
+      skipBtn.className='interstitial-skip ready';
+      skipLabel.textContent=lang==='es'?'Cerrar':'Close';
+      counter.textContent='';
+    }
+  },1000);
+}
+
+function closeInterstitial(){
+  if(!document.getElementById('int-skip-btn').classList.contains('ready')) return;
+  document.getElementById('interstitial-overlay').classList.remove('show');
+  clearInterval(_intTimer);
+}
+
 // ── BOOST / AD SYSTEM ─────────────────────────────────────────────
-const BOOST_DURATION = 10 * 60 * 1000;   // 10 minutes in ms
-const BOOST_COOLDOWN = 30 * 60 * 1000;   // 30 min cooldown between ads
-const BOOST_MULT = 3;
+const BOOST_DURATION=10*60*1000;
+const BOOST_COOLDOWN=30*60*1000;
 
 function watchAd(){
-  const now = Date.now();
-
-  // Still on cooldown?
-  if(G.boost.cooldownUntil && now < G.boost.cooldownUntil){
-    const secs = Math.ceil((G.boost.cooldownUntil - now)/1000);
-    notify('Next ad available in ' + FMTS(secs));
+  const now=Date.now();
+  if(G.boost.cooldownUntil&&now<G.boost.cooldownUntil){
+    notify((lang==='es'?'Siguiente ad en: ':'Next ad in: ')+FMTS((G.boost.cooldownUntil-now)/1000));
     return;
   }
-
-  // Already active?
-  if(G.boost.active && now < G.boost.endsAt){
-    notify('Boost already active!');
+  if(G.boost.active&&now<G.boost.endsAt){
+    notify(lang==='es'?'Boost ya activo!':'Boost already active!');
     return;
   }
-
-  // ── ADMOB INTEGRATION POINT ──────────────────────────────────
-  // When AdMob is configured, replace the simulateAd() call below with:
-  //   AdMob.showRewardVideoAd().then(() => grantBoost());
-  // Everything else stays the same.
-  // ─────────────────────────────────────────────────────────────
+  // ── ADMOB INTEGRATION POINT ──────────────────────────────────────
+  // Replace simulateAd() with:
+  //   AdMob.showRewardVideoAd().then(()=>grantBoost());
+  // ─────────────────────────────────────────────────────────────────
   simulateAd();
 }
 
 function simulateAd(){
-  // Simulates watching an ad — replace with real AdMob call later
-  const btn = document.getElementById('boost-btn');
-  btn.textContent = '...';
-  btn.className = 'boost-btn cooldown';
-  // Simulate 1.5s "ad playing"
-  setTimeout(()=>{
-    grantBoost();
-  }, 1500);
+  const btn=document.getElementById('boost-btn');
+  btn.textContent='...';
+  btn.className='boost-btn cooldown';
+  setTimeout(()=>grantBoost(),1500);
 }
 
 function grantBoost(){
-  const now = Date.now();
-  G.boost.active = true;
-  G.boost.endsAt = now + BOOST_DURATION;
-  G.boost.cooldownUntil = now + BOOST_COOLDOWN;
+  const now=Date.now();
+  G.boost.active=true;
+  G.boost.endsAt=now+BOOST_DURATION;
+  G.boost.cooldownUntil=now+BOOST_COOLDOWN;
   sfxUpgrade();
-  notify(lang==='es' ? 'x3 produccion por 10 min!' : 'x3 production for 10 min!');
+  notify(lang==='es'?'x3 produccion por 10 min!':'x3 production for 10 min!');
   saveGame();
 }
 
 function updateBoostUI(){
-  const now = Date.now();
-  const btn = document.getElementById('boost-btn');
-  const timer = document.getElementById('boost-timer');
-  const fill = document.getElementById('boost-prog-fill');
-  const label = document.getElementById('boost-label');
-
-  if(G.boost.active && now < G.boost.endsAt){
-    // BOOST ACTIVE
-    const remaining = G.boost.endsAt - now;
-    const pct = (remaining / BOOST_DURATION) * 100;
-    btn.className = 'boost-btn active';
-    btn.textContent = 'x3 ON';
-    label.textContent = lang==='es' ? 'BOOST ACTIVO' : 'BOOST ACTIVE';
-    timer.className = 'boost-timer';
-    timer.textContent = FMTS(remaining/1000) + ' remaining';
-    fill.style.width = pct + '%';
-    fill.style.background = 'linear-gradient(90deg,#15aa44,#39ff88)';
-    // Deactivate when expired
-    if(remaining <= 0){
-      G.boost.active = false;
-      sfxBuy();
-    }
-  } else if(G.boost.cooldownUntil && now < G.boost.cooldownUntil){
-    // COOLDOWN
-    const remaining = G.boost.cooldownUntil - now;
-    const pct = (remaining / BOOST_COOLDOWN) * 100;
-    btn.className = 'boost-btn cooldown';
-    btn.textContent = FMTS(remaining/1000);
-    label.textContent = lang==='es' ? 'SIGUIENTE AD EN' : 'NEXT AD IN';
-    timer.className = 'boost-timer inactive';
-    timer.textContent = lang==='es' ? 'Cooldown activo' : 'Cooldown active';
-    fill.style.width = pct + '%';
-    fill.style.background = 'linear-gradient(90deg,#1a3a1a,#2a5a2a)';
+  const now=Date.now();
+  const btn=document.getElementById('boost-btn');
+  const timer=document.getElementById('boost-timer');
+  const fill=document.getElementById('boost-prog-fill');
+  const label=document.getElementById('boost-label');
+  if(!btn) return;
+  if(G.boost.active&&now<G.boost.endsAt){
+    const rem=G.boost.endsAt-now;
+    const pct=(rem/BOOST_DURATION)*100;
+    btn.className='boost-btn active';
+    btn.textContent='x3 ON';
+    label.textContent=lang==='es'?'BOOST ACTIVO':'BOOST ACTIVE';
+    timer.className='boost-timer';
+    timer.textContent=FMTS(rem/1000)+' remaining';
+    fill.style.width=pct+'%';
+    if(rem<=0) G.boost.active=false;
+  } else if(G.boost.cooldownUntil&&now<G.boost.cooldownUntil){
+    const rem=G.boost.cooldownUntil-now;
+    const pct=(rem/BOOST_COOLDOWN)*100;
+    btn.className='boost-btn cooldown';
+    btn.textContent=FMTS(rem/1000);
+    label.textContent=lang==='es'?'SIGUIENTE AD EN':'NEXT AD IN';
+    timer.className='boost-timer inactive';
+    timer.textContent=lang==='es'?'Cooldown activo':'Cooldown active';
+    fill.style.width=pct+'%';
+    fill.style.background='linear-gradient(90deg,#1a3a1a,#2a5a2a)';
   } else {
-    // READY
-    btn.className = 'boost-btn';
-    btn.textContent = '▶ BOOST';
-    label.textContent = lang==='es' ? 'x3 PRODUCCION POR 10 MIN' : 'x3 PRODUCTION FOR 10 MIN';
-    timer.className = 'boost-timer inactive';
-    timer.textContent = lang==='es' ? 'Ver un ad para activar' : 'Watch an ad to activate';
-    fill.style.width = '0%';
+    btn.className='boost-btn';
+    btn.textContent='\u25b6 BOOST';
+    label.textContent=lang==='es'?'x3 PRODUCCION POR 10 MIN':'x3 PRODUCTION FOR 10 MIN';
+    timer.className='boost-timer inactive';
+    timer.textContent=lang==='es'?'Ver un ad para activar':'Watch an ad to activate';
+    fill.style.width='0%';
+    fill.style.background='linear-gradient(90deg,var(--green3),var(--green))';
   }
 }
 
