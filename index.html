@@ -143,6 +143,27 @@ body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padd
 .interstitial-skip.ready{border-color:var(--green);color:var(--green);}
 .interstitial-skip:active{transform:scale(.97);}
 .interstitial-counter{font-size:9px;color:var(--dim);margin-top:8px;}
+
+/* TUTORIAL */
+.tut-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:300;pointer-events:all;font-family:'Share Tech Mono',monospace;}
+.tut-bg{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.0);transition:background .4s;}
+.tut-bg.dim{background:rgba(0,0,0,0.82);}
+.tut-spotlight{position:absolute;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,0.82),0 0 0 3px #39ff88,0 0 24px 4px #39ff88;transition:all .5s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:1;}
+.tut-card{position:absolute;background:#0d1f0d;border:1px solid #2a5a2a;border-radius:10px;padding:14px;z-index:2;max-width:90vw;width:320px;box-shadow:0 4px 32px rgba(0,255,100,.12);}
+.tut-scientist{width:72px;height:72px;flex-shrink:0;image-rendering:pixelated;border:1px solid #2a5a2a;border-radius:6px;background:#0a1a0a;}
+.tut-header{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
+.tut-name{font-size:9px;color:#15aa44;letter-spacing:2px;margin-bottom:3px;}
+.tut-text{font-size:11px;color:#39ff88;line-height:1.6;min-height:48px;}
+.tut-cursor{display:inline-block;width:2px;height:13px;background:#39ff88;margin-left:1px;vertical-align:middle;animation:blink .7s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.tut-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid #1a3a1a;}
+.tut-dots{display:flex;gap:4px;}
+.tut-dot{width:6px;height:6px;border-radius:50%;background:#1a3a1a;transition:background .3s;}
+.tut-dot.active{background:#39ff88;}
+.tut-hint{font-size:9px;color:#2a5a2a;letter-spacing:1px;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.tut-skip{font-size:9px;color:#2a5a2a;letter-spacing:1px;cursor:pointer;padding:2px 6px;border:1px solid #1a3a1a;border-radius:3px;background:transparent;}
+.tut-skip:active{color:#39ff88;border-color:#2a5a2a;}
 .notif{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#001f0d;border:1px solid var(--green);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green);pointer-events:none;opacity:0;transition:opacity .3s;z-index:100;white-space:nowrap;max-width:90vw;}
 .ticker{font-size:10px;color:var(--green3);text-align:center;margin-top:10px;letter-spacing:1px;opacity:.7;}
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(57,255,136,.012) 2px,rgba(57,255,136,.012) 4px);pointer-events:none;z-index:0;}
@@ -243,6 +264,9 @@ body>*{position:relative;z-index:1;}
       <button class="cfg-action-btn" id="btn-save" onclick="saveGame();notify(T('saved'))">
         &#128190; <span id="lbl-save">Save game</span>
       </button>
+      <button class="cfg-action-btn" id="btn-tutorial" onclick="startTutorial();showTab('upg')">
+        &#9432; <span id="lbl-tutorial">View tutorial again</span>
+      </button>
       <button class="cfg-action-btn danger" id="btn-reset" onclick="resetGame()">
         &#9888; <span id="lbl-reset">Reset all progress</span>
       </button>
@@ -314,6 +338,7 @@ const STRINGS = {
     stat_reb_prog:'Next rebirth progress',
     stat_total_time:'Total play time', stat_session:'Current session',
     sound_on:'ON', sound_off:'OFF',
+    lbl_tutorial:'View tutorial again',
     tickers:[
       'Reactor #1 operating at 98.3%...','Core temperature: 15,000,000 C...','Thermal neutrons in nominal range...','U-235 enrichment: 3.7%...','Primary cooling circuit active...','Power grid synchronized at 50 Hz...','Control rods at optimal position...','Geiger-Muller monitor: normal levels...','SCRAM safety system ready...','Steam turbines spinning at 3000 rpm...','Steam pressure: 70 bar nominal...','Heavy water: temperature 285C...','IAEA inspection: all clear...','Turbogenerator efficiency: 99.1%...',
     ],
@@ -386,6 +411,7 @@ const STRINGS = {
     stat_reb_prog:'Progreso proximo rebirth',
     stat_total_time:'Tiempo total jugado', stat_session:'Sesion actual',
     sound_on:'ON', sound_off:'OFF',
+    lbl_tutorial:'View tutorial again',
     tickers:[
       'Reactor N1 operando al 98.3%...','Temperatura nucleo: 15.000.000 C...','Neutrones termicos en rango nominal...','Enriquecimiento U-235: 3.7%...','Circuito de refrigeracion primario activo...','Red electrica sincronizada a 50 Hz...','Barras de control en posicion optima...','Monitor Geiger-Muller: niveles normales...','Sistema de seguridad SCRAM listo...','Turbinas de vapor girando a 3000 rpm...','Presion del vapor: 70 bar nominal...','Agua pesada: temperatura 285C...','Inspeccion OIEA: todo en orden...','Rendimiento turbogenerador: 99.1%...',
     ],
@@ -448,7 +474,7 @@ function applyLang(){
     'lbl-upgrades-title':'lbl_upgrades_title','lbl-lab-title':'lbl_lab_title',
     'lbl-reb-header':'lbl_reb_header',
     'lbl-cfg-lang':'lbl_cfg_lang','lbl-cfg-audio':'lbl_cfg_audio','lbl-cfg-game':'lbl_cfg_game',
-    'lbl-cfg-sound':'lbl_cfg_sound','lbl-save':'lbl_save','lbl-reset':'lbl_reset',
+    'lbl-cfg-sound':'lbl_cfg_sound','lbl-save':'lbl_save','lbl-reset':'lbl_reset','lbl-tutorial':'lbl_tutorial',
     'lbl-autosave':'lbl_autosave',
   };
   Object.entries(map).forEach(([eid,key])=>{
@@ -584,6 +610,7 @@ let G = {
   owned:{uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0,quantum:0},
   upgBought:[], resDone:[],
   boost:{active:false,endsAt:0,cooldownUntil:0},
+  tutorialDone:false,
   lastSave:Date.now(), lang:'en',
   stats:{
     totalPlayTime:0, allTimeEarned:0, totalBought:0, totalUpgrades:0,
@@ -611,6 +638,7 @@ function loadGame(){
     G.upgBought=s.upgBought||[]; G.resDone=s.resDone||[];
     G.lastSave=s.lastSave||Date.now();
     G.boost=Object.assign({active:false,endsAt:0,cooldownUntil:0},s.boost||{});
+    G.tutorialDone=s.tutorialDone||false;
     if(G.boost.endsAt&&Date.now()>G.boost.endsAt) G.boost.active=false;
     G.lang=s.lang||'en';
     G.stats=Object.assign({
@@ -990,6 +1018,356 @@ function sfxRebirth(){
   }catch(e){}
 }
 
+
+// ── TUTORIAL SYSTEM ───────────────────────────────────────────────
+const TUTORIAL_STEPS = [
+  {
+    en: "Welcome, scientist. I am Dr. Elena Volkov. I will guide you through Nuclear Tycoon. Tap anywhere to continue.",
+    es: "Bienvenido, cientifico. Soy la Dra. Elena Volkov. Te guiare en Nuclear Tycoon. Toca para continuar.",
+    target: null, pos: 'center'
+  },
+  {
+    en: "This is your HUD. The left box shows your USD — the money you earn. The right shows Energy in megawatts. Both grow automatically as your reactors run.",
+    es: "Este es tu HUD. La caja izquierda muestra tus USD. La derecha muestra tu Energia en megavatios. Ambas crecen automaticamente.",
+    target: '.hud', pos: 'below'
+  },
+  {
+    en: "This is the BOOST button. Tap it to watch a short ad and activate x3 production for 10 full minutes. Use it wisely — there is a 30 minute cooldown.",
+    es: "Este es el boton BOOST. Tocalo para ver un ad y activar x3 produccion por 10 minutos. Hay 30 minutos de cooldown.",
+    target: '#boost-bar', pos: 'below'
+  },
+  {
+    en: "These are your ENERGY SOURCES. Tap any card to buy a reactor unit. The more you own, the more USD you earn every second. New sources unlock as you earn more.",
+    es: "Estas son tus FUENTES DE ENERGIA. Toca una tarjeta para comprar un reactor. Cuantos mas tengas, mas USD ganas por segundo.",
+    target: '#res-grid', pos: 'above'
+  },
+  {
+    en: "The UPGRADES tab holds one-time purchases that permanently multiply your production. A control rod upgrade might double your Uranium output forever. Buy them as soon as you can.",
+    es: "La pestana MEJORAS tiene compras unicas que multiplican tu produccion permanentemente. Compralas en cuanto puedas.",
+    target: '#tab-upg', pos: 'below'
+  },
+  {
+    en: "The LAB tab is your research center. Researching a topic gives a global or targeted bonus — like +2x Fusion or +35% to everything. These stack with upgrades.",
+    es: "La pestana LAB es tu centro de investigacion. Investigar da bonificaciones globales o especificas que se acumulan con las mejoras.",
+    target: '#tab-res', pos: 'below'
+  },
+  {
+    en: "REBIRTH is your most powerful tool. Once you have earned $500M total, you can reset everything in exchange for a permanent +10% income multiplier that stacks forever.",
+    es: "REBIRTH es tu herramienta mas poderosa. Al ganar $500M en total, puedes resetear todo a cambio de un +10% permanente que se acumula.",
+    target: '#tab-reb', pos: 'below'
+  },
+  {
+    en: "The STATS tab tracks everything: your best income rate, total lifetime earnings, achievements, and time played. Check it to see how far you have come.",
+    es: "La pestana STATS registra todo: tu mejor tasa, ganancias de por vida, logros y tiempo jugado. Revisala para ver tu progreso.",
+    target: '#tab-stat', pos: 'below'
+  },
+  {
+    en: "Finally, the gear icon opens SETTINGS. Change language, toggle sound, save or reset your game, and replay this tutorial anytime.",
+    es: "El icono de engranaje abre CONFIGURACION. Cambia idioma, silencia el sonido, guarda o resetea, y repite este tutorial cuando quieras.",
+    target: '#tab-cfg', pos: 'below'
+  },
+  {
+    en: "That is everything. Build your reactors, research the unknown, and rebirth into power. The atom awaits, scientist. Good luck.",
+    es: "Eso es todo. Construye tus reactores, investiga lo desconocido, y renace con mas poder. El atomo te espera. Buena suerte.",
+    target: null, pos: 'center'
+  },
+];
+
+let _tutStep = 0;
+let _tutTyping = false;
+let _tutFullText = '';
+let _tutDisplayed = '';
+let _tutTimer = null;
+let _tutCharTimer = null;
+let _scientistFrame = 0;
+let _scientistTimer = null;
+
+function startTutorial(){
+  _tutStep = 0;
+  const overlay = document.getElementById('tut-overlay');
+  overlay.style.display = 'block';
+  document.getElementById('tut-bg').classList.add('dim');
+  buildDots();
+  showTutStep(_tutStep);
+  // Start scientist animation
+  _scientistTimer = setInterval(drawScientist, 120);
+}
+
+function skipTutorial(){
+  endTutorial();
+}
+
+function endTutorial(){
+  clearInterval(_tutCharTimer);
+  clearInterval(_scientistTimer);
+  clearTimeout(_tutTimer);
+  document.getElementById('tut-overlay').style.display = 'none';
+  document.getElementById('tut-bg').classList.remove('dim');
+  document.getElementById('tut-spotlight').style.cssText = '';
+  G.tutorialDone = true;
+  saveGame();
+  notify(T('loaded'));
+}
+
+function tutTap(){
+  if(_tutTyping){
+    // Skip typing — show full text instantly
+    clearInterval(_tutCharTimer);
+    _tutTyping = false;
+    document.getElementById('tut-text').innerHTML = _tutFullText + '<span class="tut-cursor"></span>';
+    return;
+  }
+  // Advance to next step
+  _tutStep++;
+  if(_tutStep >= TUTORIAL_STEPS.length){
+    endTutorial();
+    return;
+  }
+  showTutStep(_tutStep);
+}
+
+function buildDots(){
+  const dots = document.getElementById('tut-dots');
+  dots.innerHTML = TUTORIAL_STEPS.map((_, i) =>
+    '<div class="tut-dot" id="tut-dot-'+i+'"></div>'
+  ).join('');
+}
+
+function updateDots(){
+  TUTORIAL_STEPS.forEach((_, i) => {
+    const d = document.getElementById('tut-dot-'+i);
+    if(d) d.className = 'tut-dot' + (i === _tutStep ? ' active' : '');
+  });
+}
+
+function showTutStep(idx){
+  const step = TUTORIAL_STEPS[idx];
+  const text = lang === 'es' ? step.es : step.en;
+  _tutFullText = text;
+  _tutDisplayed = '';
+  _tutTyping = true;
+  updateDots();
+
+  // Position spotlight
+  positionSpotlight(step.target, step.pos);
+
+  // Position card
+  positionCard(step.target, step.pos);
+
+  // Typing effect
+  clearInterval(_tutCharTimer);
+  let i = 0;
+  const el = document.getElementById('tut-text');
+  el.innerHTML = '<span class="tut-cursor"></span>';
+
+  // Typing sound cadence
+  let soundTick = 0;
+  _tutCharTimer = setInterval(()=>{
+    if(i < text.length){
+      _tutDisplayed += text[i];
+      el.innerHTML = _tutDisplayed + '<span class="tut-cursor"></span>';
+      i++;
+      soundTick++;
+      // Play typing sound every 3 chars
+      if(soundTick % 3 === 0) playTypingSound();
+    } else {
+      clearInterval(_tutCharTimer);
+      _tutTyping = false;
+    }
+  }, 28);
+}
+
+function positionSpotlight(selector, pos){
+  const sp = document.getElementById('tut-spotlight');
+  if(!selector){
+    sp.style.cssText = 'display:none';
+    return;
+  }
+  const el = document.querySelector(selector);
+  if(!el){ sp.style.cssText = 'display:none'; return; }
+  const r = el.getBoundingClientRect();
+  const pad = 6;
+  sp.style.cssText = [
+    'display:block',
+    'left:'+(r.left-pad)+'px',
+    'top:'+(r.top-pad)+'px',
+    'width:'+(r.width+pad*2)+'px',
+    'height:'+(r.height+pad*2)+'px',
+  ].join(';');
+}
+
+function positionCard(selector, pos){
+  const card = document.getElementById('tut-card');
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  if(!selector || pos === 'center'){
+    card.style.left = Math.max(8, (vw-320)/2) + 'px';
+    card.style.top = (vh/2 - 120) + 'px';
+    card.style.bottom = 'auto';
+    return;
+  }
+
+  const el = document.querySelector(selector);
+  if(!el){
+    card.style.left = Math.max(8, (vw-320)/2) + 'px';
+    card.style.top = (vh/2-120)+'px';
+    return;
+  }
+
+  const r = el.getBoundingClientRect();
+  const cardW = Math.min(320, vw - 16);
+  card.style.width = cardW + 'px';
+  card.style.left = Math.max(8, Math.min(r.left, vw - cardW - 8)) + 'px';
+
+  if(pos === 'below'){
+    const top = r.bottom + 12;
+    if(top + 200 < vh){
+      card.style.top = top + 'px';
+      card.style.bottom = 'auto';
+    } else {
+      card.style.bottom = (vh - r.top + 12) + 'px';
+      card.style.top = 'auto';
+    }
+  } else {
+    const bottom = vh - r.top + 12;
+    if(bottom + 200 < vh){
+      card.style.bottom = bottom + 'px';
+      card.style.top = 'auto';
+    } else {
+      card.style.top = r.bottom + 12 + 'px';
+      card.style.bottom = 'auto';
+    }
+  }
+}
+
+// Typing sound — very soft, short blip
+function playTypingSound(){
+  try{
+    const ac = getAC();
+    const t = ac.currentTime;
+    const o = ac.createOscillator();
+    const g = ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.type = 'square';
+    o.frequency.setValueAtTime(180 + Math.random()*60, t);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.04, t + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+    o.start(t); o.stop(t + 0.05);
+  }catch(e){}
+}
+
+// ── PIXEL ART SCIENTIST ───────────────────────────────────────────
+function drawScientist(){
+  const canvas = document.getElementById('tut-scientist');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 72, H = 72;
+  const f = _scientistFrame;
+  ctx.fillStyle = '#0a1a0a';
+  ctx.fillRect(0, 0, W, H);
+
+  // Lab coat body
+  ctx.fillStyle = '#ccddcc';
+  ctx.fillRect(20, 34, 32, 28);
+  // Lab coat lapels
+  ctx.fillStyle = '#aabbaa';
+  ctx.fillRect(20, 34, 8, 16);
+  ctx.fillRect(44, 34, 8, 16);
+  // Green shirt underneath
+  ctx.fillStyle = '#2a6a2a';
+  ctx.fillRect(28, 34, 16, 16);
+
+  // Neck
+  ctx.fillStyle = '#c8a882';
+  ctx.fillRect(30, 28, 12, 8);
+
+  // Head
+  ctx.fillStyle = '#c8a882';
+  ctx.fillRect(22, 10, 28, 22);
+  // Hair
+  ctx.fillStyle = '#553311';
+  ctx.fillRect(22, 10, 28, 7);
+  ctx.fillRect(22, 10, 5, 18);
+
+  // Eyes — blink every ~40 frames
+  const blink = (f % 40) < 3;
+  ctx.fillStyle = '#222';
+  if(blink){
+    ctx.fillRect(28, 22, 6, 2);
+    ctx.fillRect(38, 22, 6, 2);
+  } else {
+    ctx.fillRect(28, 20, 6, 6);
+    ctx.fillRect(38, 20, 6, 6);
+    // pupils
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(30, 21, 2, 2);
+    ctx.fillRect(40, 21, 2, 2);
+  }
+
+  // Glasses
+  ctx.strokeStyle = '#888844';
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(26, 19, 10, 8);
+  ctx.strokeRect(36, 19, 10, 8);
+  ctx.beginPath(); ctx.moveTo(36,23); ctx.lineTo(36,23); ctx.stroke();
+
+  // Mouth — talking animation
+  ctx.fillStyle = '#8a5a3a';
+  const mouthOpen = Math.sin(f * 0.4) > 0.2;
+  if(mouthOpen){
+    ctx.fillRect(30, 28, 12, 4);
+    ctx.fillStyle = '#cc4444';
+    ctx.fillRect(31, 29, 10, 2);
+  } else {
+    ctx.fillRect(30, 29, 12, 2);
+  }
+
+  // Arms — slight bob
+  const armY = Math.floor(Math.sin(f * 0.15) * 2);
+  ctx.fillStyle = '#ccddcc';
+  ctx.fillRect(10, 36 + armY, 12, 6);  // left arm
+  ctx.fillRect(50, 34 - armY, 12, 6);  // right arm
+  // Hands
+  ctx.fillStyle = '#c8a882';
+  ctx.fillRect(8, 40 + armY, 8, 6);
+  ctx.fillRect(56, 38 - armY, 8, 6);
+
+  // Clipboard in right hand
+  ctx.fillStyle = '#ddbb88';
+  ctx.fillRect(56, 30 - armY, 10, 14);
+  ctx.fillStyle = '#335533';
+  ctx.fillRect(58, 32 - armY, 6, 2);
+  ctx.fillRect(58, 36 - armY, 6, 2);
+  ctx.fillRect(58, 40 - armY, 4, 2);
+
+  // Feet / base
+  ctx.fillStyle = '#334433';
+  ctx.fillRect(22, 62, 12, 6);
+  ctx.fillRect(38, 62, 12, 6);
+
+  // Name badge
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(26, 42, 14, 8);
+  ctx.fillStyle = '#224422';
+  ctx.fillRect(27, 44, 12, 2);
+  ctx.fillRect(27, 47, 8, 1);
+
+  // Radiation symbol on coat
+  ctx.strokeStyle = 'rgba(57,255,136,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(36, 54, 4, 0, Math.PI*2); ctx.stroke();
+  ctx.beginPath();
+  for(let i=0;i<3;i++){
+    const a = i*Math.PI*2/3 - Math.PI/2;
+    ctx.moveTo(36+Math.cos(a)*2, 54+Math.sin(a)*2);
+    ctx.lineTo(36+Math.cos(a)*4, 54+Math.sin(a)*4);
+  }
+  ctx.stroke();
+
+  _scientistFrame++;
+}
 // ── INTERSTITIAL SYSTEM ───────────────────────────────────────────
 const INT_SKIP_DELAY = 5000;
 let _intTimer = null;
@@ -1118,7 +1496,10 @@ setInterval(tick,80);
 setInterval(renderAll,900);
 setInterval(saveGame,15000);
 renderAll();
-setTimeout(()=>notify(T('loaded')),600);
+setTimeout(()=>{
+  if(!G.tutorialDone) startTutorial();
+  else notify(T('loaded'));
+},800);
 // Register service worker
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
