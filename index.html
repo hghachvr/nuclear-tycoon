@@ -133,7 +133,7 @@ body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padd
 .boost-prog{height:3px;background:#1a3a1a;border-radius:2px;margin-top:4px;overflow:hidden;}
 .boost-prog-fill{height:100%;background:linear-gradient(90deg,var(--green3),var(--green));border-radius:2px;transition:width .5s;}
 /* INTERSTITIAL */
-.interstitial-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.interstitial-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
 .interstitial-overlay.show{opacity:1;pointer-events:all;}
 .interstitial-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px 20px;width:88%;max-width:340px;text-align:center;}
 .interstitial-title{font-family:'Orbitron',monospace;font-size:14px;color:var(--purple);letter-spacing:2px;margin-bottom:6px;}
@@ -145,7 +145,7 @@ body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padd
 .interstitial-counter{font-size:9px;color:var(--dim);margin-top:8px;}
 
 /* TUTORIAL */
-.tut-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999!important;pointer-events:all;font-family:'Share Tech Mono',monospace;}
+.tut-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:300;pointer-events:all;font-family:'Share Tech Mono',monospace;}
 .tut-bg{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.0);transition:background .4s;}
 .tut-bg.dim{background:rgba(0,0,0,0.82);}
 .tut-spotlight{position:absolute;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,0.82),0 0 0 3px #39ff88,0 0 24px 4px #39ff88;transition:all .5s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:1;}
@@ -264,7 +264,7 @@ body>*{position:relative;z-index:1;}
       <button class="cfg-action-btn" id="btn-save" onclick="saveGame();notify(T('saved'))">
         &#128190; <span id="lbl-save">Save game</span>
       </button>
-      <button class="cfg-action-btn" id="btn-tutorial" onclick="startTutorial()">
+      <button class="cfg-action-btn" id="btn-tutorial" onclick="startTutorial();showTab('upg')">
         &#9432; <span id="lbl-tutorial">View tutorial again</span>
       </button>
       <button class="cfg-action-btn danger" id="btn-reset" onclick="resetGame()">
@@ -1084,22 +1084,13 @@ let _scientistTimer = null;
 
 function startTutorial(){
   _tutStep = 0;
-  // Close any open overlays and scroll to top
-  window.scrollTo(0,0);
-  document.body.style.overflow = 'hidden';
   const overlay = document.getElementById('tut-overlay');
   overlay.style.display = 'block';
-  overlay.style.zIndex = '9999';
-  // Force repaint
-  overlay.offsetHeight;
   document.getElementById('tut-bg').classList.add('dim');
   buildDots();
   showTutStep(_tutStep);
   // Start scientist animation
-  clearInterval(_scientistTimer);
   _scientistTimer = setInterval(drawScientist, 120);
-  // Draw first frame immediately
-  setTimeout(drawScientist, 50);
 }
 
 function skipTutorial(){
@@ -1110,10 +1101,10 @@ function endTutorial(){
   clearInterval(_tutCharTimer);
   clearInterval(_scientistTimer);
   clearTimeout(_tutTimer);
-  const overlay = document.getElementById('tut-overlay');
-  overlay.style.display = 'none';
-  document.getElementById('tut-bg').classList.remove('dim');
-  document.getElementById('tut-spotlight').style.cssText = 'display:none';
+  const ov = document.getElementById('tut-overlay');
+  if(ov) ov.style.display = 'none';
+  const sp = document.getElementById('tut-spotlight');
+  if(sp) sp.style.display = 'none';
   document.body.style.overflow = '';
   G.tutorialDone = true;
   saveGame();
@@ -1516,5 +1507,25 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 </script>
+
+<!-- TUTORIAL OVERLAY -->
+<div id="tut-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;pointer-events:all;font-family:'Share Tech Mono',monospace;">
+  <div id="tut-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0);transition:background .4s;"></div>
+  <div id="tut-spotlight" style="display:none;position:absolute;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,0.82),0 0 0 3px #39ff88,0 0 24px 4px #39ff88;transition:all .5s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:1;"></div>
+  <div id="tut-card" style="position:absolute;background:#0d1f0d;border:1px solid #2a5a2a;border-radius:10px;padding:14px;z-index:2;max-width:90vw;width:300px;box-shadow:0 4px 32px rgba(0,255,100,.12);" onclick="tutTap()">
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;">
+      <canvas id="tut-scientist" width="72" height="72" style="flex-shrink:0;image-rendering:pixelated;border:1px solid #2a5a2a;border-radius:6px;background:#0a1a0a;"></canvas>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:9px;color:#15aa44;letter-spacing:2px;margin-bottom:4px;">DR. ELENA VOLKOV</div>
+        <div id="tut-text" style="font-size:11px;color:#39ff88;line-height:1.6;min-height:52px;"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid #1a3a1a;">
+      <button onclick="event.stopPropagation();skipTutorial()" style="font-size:9px;color:#2a5a2a;letter-spacing:1px;cursor:pointer;padding:2px 6px;border:1px solid #1a3a1a;border-radius:3px;background:transparent;font-family:'Share Tech Mono',monospace;">SKIP</button>
+      <div id="tut-dots" style="display:flex;gap:4px;"></div>
+      <div style="font-size:9px;color:#2a5a2a;letter-spacing:1px;animation:pulse 2s ease-in-out infinite;">TAP TO CONTINUE</div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
