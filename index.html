@@ -23,10 +23,8 @@
 html,body{background:var(--bg);min-height:100vh;overflow-x:hidden;}
 body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padding-bottom:40px;}
 .hud{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
-.hud-box{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px 8px;text-align:center;}
-.hud-label{font-size:10px;color:var(--text);letter-spacing:2px;}
-.hud-val{font-size:18px;color:var(--green);font-family:'Orbitron',monospace;font-weight:700;margin-top:3px;word-break:break-all;}
-.hud-rate{font-size:11px;color:var(--green3);margin-top:2px;}
+.hud-box{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px 8px;text-align:center;min-width:0;overflow:hidden;}.hud-label{font-size:10px;color:var(--text);letter-spacing:2px;}
+.hud-val{font-size:clamp(9px,3.8vw,18px);color:var(--green);font-family:'Orbitron',monospace;font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;width:100%;}.hud-rate{font-size:11px;color:var(--green3);margin-top:2px;}
 .titlebar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;}
 .game-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:900;letter-spacing:3px;color:var(--green);}
 .rebirth-badge{background:#1a0a2a;border:1px solid #8833cc;border-radius:10px;padding:2px 8px;font-size:10px;color:#dd99ff;display:none;}
