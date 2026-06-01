@@ -23,7 +23,7 @@
 html,body{background:var(--bg);min-height:100vh;overflow-x:hidden;}
 body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padding-bottom:40px;}
 .hud{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
-.hud-box{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px 8px;text-align:center;}
+.hud-box{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px 8px;text-align:center;min-width:0;overflow:hidden;}
 .hud-label{font-size:10px;color:var(--text);letter-spacing:2px;}
 .hud-val{font-size:clamp(9px,3.8vw,18px);color:var(--green);font-family:'Orbitron',monospace;font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;width:100%;}.hud-rate{font-size:11px;color:var(--green3);margin-top:2px;}
 .titlebar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;}
@@ -143,7 +143,7 @@ body>*{position:relative;z-index:1;}
   </div>
   <div class="hud-box">
     <div class="hud-label" id="lbl-energy">ENERGY (MW)</div>
-    <div class="hud-val" id="hud-energy">0 MW</div>
+    <div class="hud-val" id="hud-energy">0</div>
     <div class="hud-rate" id="hud-erate">+0/s</div>
   </div>
 </div>
@@ -231,7 +231,7 @@ body>*{position:relative;z-index:1;}
 const STRINGS = {
   en: {
     tab_upg:'UPGRADES', tab_res:'LAB', tab_reb:'REBIRTH', tab_stat:'STATS', tab_cfg:'&#9881;',
-    lbl_usd:'USD', lbl_energy:'ENERGY',
+    lbl_usd:'USD', lbl_energy:'ENERGY (MW)',
     lbl_sources:'ENERGY SOURCES \u2014 tap to buy',
     lbl_upgrades_title:'AVAILABLE UPGRADES',
     lbl_lab_title:'NUCLEAR RESEARCH LAB',
@@ -303,7 +303,7 @@ const STRINGS = {
   },
   es: {
     tab_upg:'MEJORAS', tab_res:'LAB', tab_reb:'REBIRTH', tab_stat:'STATS', tab_cfg:'&#9881;',
-    lbl_usd:'USD', lbl_energy:'ENERGIA',
+    lbl_usd:'USD', lbl_energy:'ENERGIA (MW)',
     lbl_sources:'FUENTES DE ENERGIA \u2014 toca para comprar',
     lbl_upgrades_title:'UPGRADES DISPONIBLES',
     lbl_lab_title:'LAB DE INVESTIGACION NUCLEAR',
@@ -445,6 +445,7 @@ const FMT = n => {
   if(n>=1e6)  return '$'+(n/1e6).toFixed(2)+'M';
   if(n>=1e3)  return '$'+(n/1e3).toFixed(1)+'K';
   return '$'+Math.floor(n);
+};
 const FMTN = n => {
   if(n>=1e18) return (n/1e18).toFixed(2)+'Qi';
   if(n>=1e15) return (n/1e15).toFixed(2)+'Q';
