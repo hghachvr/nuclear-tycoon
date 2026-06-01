@@ -453,10 +453,8 @@ const FMTN = n => {
   if(n>=1e9)  return (n/1e9).toFixed(2)+'B';
   if(n>=1e6)  return (n/1e6).toFixed(2)+'M';
   if(n>=1e3)  return (n/1e3).toFixed(1)+'K';
-return '$'+Math.floor(n);
+  return Math.floor(n)+'';
 };
-const FMTN = n => {
-const FMTN_OLD = n => {
 const FMTS = s => {
   if(s<60) return Math.floor(s)+'s';
   if(s<3600) return Math.floor(s/60)+'m '+Math.floor(s%60)+'s';
