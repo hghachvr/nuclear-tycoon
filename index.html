@@ -1468,8 +1468,8 @@ function simulateAd(){
   // This code runs in Capacitor (Android/iOS). In browser it's simulated.
   const btn=document.getElementById('boost-btn');
   
-  if(typeof AdMob !== 'undefined'){
-    // Real AdMob (in Capacitor app)
+  if(false && typeof AdMob !== 'undefined'){
+    // Real AdMob (in Capacitor app) — DISABLED FOR TESTING
     btn.textContent='Loading ad...';
     btn.className='boost-btn cooldown';
     
