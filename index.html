@@ -504,6 +504,32 @@ function applyLang(){
 }
 
 // ── CONSTANTS ─────────────────────────────────────────────────────
+
+// ── CAPACITOR SETUP (for Android/iOS app) ─────────────────────
+// When publishing to Google Play with Capacitor:
+//
+// 1. Install AdMob plugin:
+//    npm install @capacitor-community/admob
+//
+// 2. In your main.ts or index.ts, add:
+//    import { AdMob } from '@capacitor-community/admob';
+//    
+//    AdMob.initialize({
+//      requestTrackingAuthorization: true,
+//      initializeForTesting: true, // remove for production
+//    });
+//
+// 3. The simulateAd() function will automatically detect AdMob
+//    and use the real implementation instead of simulation.
+//
+// 4. Ad Unit IDs:
+//    - Rewarded: ca-app-pub-3857606933018614/5232263494
+//    - Interstitial: (configure when ready)
+
+// ── ADMOB CONFIGURATION ───────────────────────────────────────
+const ADMOB_APP_ID = 'ca-app-pub-3857606933018614~1646721794';
+const ADMOB_REWARDED_ID = 'ca-app-pub-3857606933018614/5232263494';
+
 const REBIRTH_COST = 500000000;
 const FMT = n => {
   if(n>=1e18) return '$'+(n/1e18).toFixed(2)+'Qi';
@@ -1438,10 +1464,29 @@ function watchAd(){
 }
 
 function simulateAd(){
+  // ── ADMOB REWARDED AD ─────────────────────────────────────────
+  // This code runs in Capacitor (Android/iOS). In browser it's simulated.
   const btn=document.getElementById('boost-btn');
-  btn.textContent='...';
-  btn.className='boost-btn cooldown';
-  setTimeout(()=>grantBoost(),1500);
+  
+  if(typeof AdMob !== 'undefined'){
+    // Real AdMob (in Capacitor app)
+    btn.textContent='Loading ad...';
+    btn.className='boost-btn cooldown';
+    
+    AdMob.showRewardVideoAd().then(()=>{
+      grantBoost();
+    }).catch(err=>{
+      console.error('Ad failed:', err);
+      notify('Ad failed to load');
+      btn.className='boost-btn';
+      btn.textContent='\u25b6 BOOST';
+    });
+  } else {
+    // Browser simulation (development/testing)
+    btn.textContent='...';
+    btn.className='boost-btn cooldown';
+    setTimeout(()=>grantBoost(),1500);
+  }
 }
 
 function grantBoost(){
