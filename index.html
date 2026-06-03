@@ -148,7 +148,7 @@ body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padd
 .tut-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;pointer-events:all;font-family:'Share Tech Mono',monospace;}
 .tut-bg{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);transition:background .4s;}
 .tut-spotlight{position:absolute;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,0.85),0 0 0 2px #39ff88,0 0 20px 4px rgba(57,255,136,0.5);transition:left .4s cubic-bezier(.4,0,.2,1),top .4s cubic-bezier(.4,0,.2,1),width .4s,height .4s;pointer-events:none;z-index:2;}
-.tut-card{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:480px;background:#0a1a0a;border:2px solid #39ff88;border-radius:16px;padding:18px;z-index:10;box-shadow:0 0 40px rgba(57,255,136,0.15),0 8px 32px rgba(0,0,0,0.6);}
+.tut-card{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 32px);max-width:480px;background:#0a1a0a;border:2px solid #39ff88;border-radius:16px;padding:18px;z-index:10;box-shadow:0 0 40px rgba(57,255,136,0.15),0 8px 32px rgba(0,0,0,0.6);}
 .tut-card-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
 .tut-scientist{width:80px;height:80px;flex-shrink:0;image-rendering:pixelated;border:2px solid #2a5a2a;border-radius:10px;background:#050f05;}
 .tut-card-title{flex:1;}
@@ -1047,53 +1047,53 @@ function sfxRebirth(){
 // ── TUTORIAL SYSTEM ───────────────────────────────────────────────
 const TUTORIAL_STEPS = [
   {
-    en: "Welcome, scientist. I am Dr. Elena Volkov. I will guide you through Nuclear Tycoon. Tap anywhere to continue.",
-    es: "Bienvenido, cientifico. Soy la Dra. Elena Volkov. Te guiare en Nuclear Tycoon. Toca para continuar.",
+    en: "Welcome, scientist. I am Dr. Elena Volkov. Nuclear Tycoon puts you in charge of a growing atomic energy empire. Let me walk you through everything.",
+    es: "Bienvenido, cientifico. Soy la Dra. Elena Volkov. Nuclear Tycoon te pone a cargo de un imperio de energia atomica en expansion. Dejame mostrarte todo.",
     target: null, pos: 'center', tab: null
   },
   {
-    en: "This is your HUD. The left box shows your USD — the money you earn. The right shows Energy in megawatts. Both grow automatically as your reactors run.",
-    es: "Este es tu HUD. La caja izquierda muestra tus USD. La derecha muestra tu Energia en megavatios. Ambas crecen automaticamente.",
-    target: '.hud', pos: 'below', tab: null
+    en: "Your two core resources are USD and Energy. USD is your currency — spend it to expand. Energy in megawatts reflects the raw power your reactors generate. Both grow passively as long as your reactors are running.",
+    es: "Tus dos recursos principales son USD y Energia. El USD es tu moneda para expandirte. La Energia en megavatios refleja la potencia bruta de tus reactores. Ambos crecen pasivamente mientras tus reactores operan.",
+    target: null, pos: 'center', tab: null
   },
   {
-    en: "This is the BOOST button. Tap it to watch a short ad and activate x3 production for 10 full minutes. Use it wisely — there is a 30 minute cooldown.",
-    es: "Este es el boton BOOST. Tocalo para ver un ad y activar x3 produccion por 10 minutos. Hay 30 minutos de cooldown.",
-    target: '#boost-bar', pos: 'below', tab: null
+    en: "The BOOST system lets you watch a short ad in exchange for x3 production for 10 full minutes. There is a 30 minute cooldown between boosts, so activate it when you are about to spend big.",
+    es: "El sistema BOOST te permite ver un ad a cambio de x3 produccion por 10 minutos completos. Hay un cooldown de 30 minutos entre boosts, asi que activalo cuando vayas a gastar en grande.",
+    target: null, pos: 'center', tab: null
   },
   {
-    en: "These are your ENERGY SOURCES. Tap any card to buy a reactor unit. The more you own, the more USD you earn every second. New sources unlock as you earn more.",
-    es: "Estas son tus FUENTES DE ENERGIA. Toca una tarjeta para comprar un reactor. Cuantos mas tengas, mas USD ganas por segundo.",
-    target: '#res-grid', pos: 'above', tab: null
+    en: "Energy Sources are the foundation of your income. Each reactor type generates more USD per second than the last. Buy multiples of the same type to stack output. New, more powerful sources unlock as your lifetime earnings grow.",
+    es: "Las Fuentes de Energia son la base de tus ingresos. Cada tipo de reactor genera mas USD por segundo que el anterior. Compra multiples del mismo tipo para acumular produccion. Nuevas fuentes se desbloquean al crecer tus ganancias.",
+    target: null, pos: 'center', tab: null
   },
   {
-    en: "The UPGRADES tab holds one-time purchases that permanently multiply your production. A control rod upgrade might double your Uranium output forever. Buy them as soon as you can.",
-    es: "La pestana MEJORAS tiene compras unicas que multiplican tu produccion permanentemente. Compralas en cuanto puedas.",
+    en: "Upgrades are one-time permanent purchases that multiply the output of your reactors. A single upgrade can double or triple a specific energy source forever. Prioritize them — they are the fastest path to higher income.",
+    es: "Las Mejoras son compras unicas y permanentes que multiplican la produccion de tus reactores. Una sola mejora puede duplicar o triplicar una fuente especifica para siempre. Prioriza comprarlas, son el camino mas rapido a mayores ingresos.",
     target: '#view-upg', pos: 'above', tab: 'upg'
   },
   {
-    en: "The LAB tab is your research center. Researching a topic gives a global or targeted bonus — like +2x Fusion or +35% to everything. These stack with upgrades.",
-    es: "La pestana LAB es tu centro de investigacion. Investigar da bonificaciones globales o especificas que se acumulan con las mejoras.",
+    en: "The Lab lets you research technologies that apply global or targeted bonuses on top of your upgrades. Research stacks multiplicatively — the more you complete, the more powerful your operation becomes.",
+    es: "El Lab permite investigar tecnologias que aplican bonificaciones globales o especificas encima de tus mejoras. Las investigaciones se acumulan de forma multiplicativa, cuantas mas completes, mas poderosa sera tu operacion.",
     target: '#view-res', pos: 'above', tab: 'res'
   },
   {
-    en: "REBIRTH is your most powerful tool. Once you have earned $500M total, you can reset everything in exchange for a permanent +10% income multiplier that stacks forever.",
-    es: "REBIRTH es tu herramienta mas poderosa. Al ganar $500M en total, puedes resetear todo a cambio de un +10% permanente que se acumula.",
+    en: "Rebirth is the prestige mechanic. Once you have accumulated $500M in total earnings, you can reset all progress in exchange for a permanent +10% income multiplier. Each rebirth stacks — ten rebirths means x2.59 production forever.",
+    es: "Rebirth es el mecanismo de prestigio. Al acumular $500M en ganancias totales, puedes reiniciar todo a cambio de un +10% permanente. Cada rebirth se acumula: diez rebirths significan x2.59 de produccion para siempre.",
     target: '#view-reb', pos: 'above', tab: 'reb'
   },
   {
-    en: "The STATS tab tracks everything: your best income rate, total lifetime earnings, achievements, and time played. Check it to see how far you have come.",
-    es: "La pestana STATS registra todo: tu mejor tasa, ganancias de por vida, logros y tiempo jugado. Revisala para ver tu progreso.",
+    en: "Stats tracks your full journey — best income rate, total lifetime earnings, milestones reached, and time played. Check it whenever you want to measure your progress or see what achievements are still waiting.",
+    es: "Stats registra todo tu recorrido: mejor tasa de ingresos, ganancias totales, hitos alcanzados y tiempo jugado. Revisalo cuando quieras medir tu progreso o ver que logros todavia te esperan.",
     target: '#view-stat', pos: 'above', tab: 'stat'
   },
   {
-    en: "Finally, the gear icon opens SETTINGS. Change language, toggle sound, save or reset your game, and replay this tutorial anytime.",
-    es: "El icono de engranaje abre CONFIGURACION. Cambia idioma, silencia el sonido, guarda o resetea, y repite este tutorial cuando quieras.",
+    en: "Settings lets you switch language, toggle sound effects, manually save, or reset your game. You can also replay this tutorial anytime from here.",
+    es: "En Ajustes puedes cambiar el idioma, activar o desactivar sonidos, guardar manualmente o reiniciar tu partida. Tambien puedes repetir este tutorial cuando quieras desde aqui.",
     target: '#view-cfg', pos: 'above', tab: 'cfg'
   },
   {
-    en: "That is everything. Build your reactors, research the unknown, and rebirth into power. The atom awaits, scientist. Good luck.",
-    es: "Eso es todo. Construye tus reactores, investiga lo desconocido, y renace con mas poder. El atomo te espera. Buena suerte.",
+    en: "That covers everything, scientist. Build your reactors, complete your research, and rebirth into greater power. The atom does not sleep — and neither should your empire. Good luck.",
+    es: "Eso cubre todo, cientifico. Construye tus reactores, completa tus investigaciones y renace con mas poder. El atomo no descansa, y tu imperio tampoco deberia. Buena suerte.",
     target: null, pos: 'center', tab: null
   },
 ];
