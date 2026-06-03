@@ -145,25 +145,24 @@ body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padd
 .interstitial-counter{font-size:9px;color:var(--dim);margin-top:8px;}
 
 /* TUTORIAL */
-.tut-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:300;pointer-events:all;font-family:'Share Tech Mono',monospace;}
-.tut-bg{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.0);transition:background .4s;}
-.tut-bg.dim{background:rgba(0,0,0,0.82);}
-.tut-spotlight{position:absolute;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,0.82),0 0 0 3px #39ff88,0 0 24px 4px #39ff88;transition:all .5s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:1;}
-.tut-card{position:absolute;background:#0d1f0d;border:1px solid #2a5a2a;border-radius:10px;padding:14px;z-index:2;max-width:90vw;width:320px;box-shadow:0 4px 32px rgba(0,255,100,.12);}
-.tut-scientist{width:72px;height:72px;flex-shrink:0;image-rendering:pixelated;border:1px solid #2a5a2a;border-radius:6px;background:#0a1a0a;}
-.tut-header{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
-.tut-name{font-size:9px;color:#15aa44;letter-spacing:2px;margin-bottom:3px;}
-.tut-text{font-size:11px;color:#39ff88;line-height:1.6;min-height:48px;}
+.tut-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;pointer-events:all;font-family:'Share Tech Mono',monospace;}
+.tut-bg{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);transition:background .4s;}
+.tut-spotlight{position:absolute;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,0.85),0 0 0 2px #39ff88,0 0 20px 4px rgba(57,255,136,0.5);transition:left .4s cubic-bezier(.4,0,.2,1),top .4s cubic-bezier(.4,0,.2,1),width .4s,height .4s;pointer-events:none;z-index:2;}
+.tut-card{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:480px;background:#0a1a0a;border:2px solid #39ff88;border-radius:16px;padding:18px;z-index:10;box-shadow:0 0 40px rgba(57,255,136,0.15),0 8px 32px rgba(0,0,0,0.6);}
+.tut-card-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.tut-scientist{width:80px;height:80px;flex-shrink:0;image-rendering:pixelated;border:2px solid #2a5a2a;border-radius:10px;background:#050f05;}
+.tut-card-title{flex:1;}
+.tut-name{font-size:13px;color:#39ff88;letter-spacing:2px;font-weight:bold;margin-bottom:3px;}
+.tut-step{font-size:10px;color:#2a6a3a;letter-spacing:1px;}
+.tut-text{font-size:12px;color:#b8ffd0;line-height:1.75;min-height:52px;margin-bottom:16px;}
 .tut-cursor{display:inline-block;width:2px;height:13px;background:#39ff88;margin-left:1px;vertical-align:middle;animation:blink .7s step-end infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.tut-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid #1a3a1a;}
-.tut-dots{display:flex;gap:4px;}
-.tut-dot{width:6px;height:6px;border-radius:50%;background:#1a3a1a;transition:background .3s;}
-.tut-dot.active{background:#39ff88;}
-.tut-hint{font-size:9px;color:#2a5a2a;letter-spacing:1px;animation:pulse 2s ease-in-out infinite;}
+.tut-buttons{display:flex;gap:10px;}
+.tut-btn-next{flex:1;padding:13px;background:#39ff88;color:#000;border:none;border-radius:10px;font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:bold;letter-spacing:2px;cursor:pointer;transition:background .15s;}
+.tut-btn-next:active{background:#20cc66;}
+.tut-btn-skip{flex:1;padding:13px;background:transparent;color:#39ff88;border:2px solid #2a5a2a;border-radius:10px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:2px;cursor:pointer;transition:border-color .15s;}
+.tut-btn-skip:active{border-color:#39ff88;}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
-.tut-skip{font-size:9px;color:#2a5a2a;letter-spacing:1px;cursor:pointer;padding:2px 6px;border:1px solid #1a3a1a;border-radius:3px;background:transparent;}
-.tut-skip:active{color:#39ff88;border-color:#2a5a2a;}
 .notif{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#001f0d;border:1px solid var(--green);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green);pointer-events:none;opacity:0;transition:opacity .3s;z-index:100;white-space:nowrap;max-width:90vw;}
 .ticker{font-size:10px;color:var(--green3);text-align:center;margin-top:10px;letter-spacing:1px;opacity:.7;}
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(57,255,136,.012) 2px,rgba(57,255,136,.012) 4px);pointer-events:none;z-index:0;}
@@ -1112,10 +1111,7 @@ function startTutorial(){
   _tutStep = 0;
   const overlay = document.getElementById('tut-overlay');
   overlay.style.display = 'block';
-  document.getElementById('tut-bg').classList.add('dim');
-  buildDots();
   showTutStep(_tutStep);
-  // Start scientist animation
   _scientistTimer = setInterval(drawScientist, 120);
 }
 
@@ -1131,6 +1127,8 @@ function endTutorial(){
   if(ov) ov.style.display = 'none';
   const sp = document.getElementById('tut-spotlight');
   if(sp) sp.style.display = 'none';
+  const bg = document.getElementById('tut-bg');
+  if(bg) bg.style.background = 'rgba(0,0,0,0.85)';
   document.body.style.overflow = '';
   G.tutorialDone = true;
   showTab('upg');
@@ -1140,13 +1138,11 @@ function endTutorial(){
 
 function tutTap(){
   if(_tutTyping){
-    // Skip typing — show full text instantly
     clearInterval(_tutCharTimer);
     _tutTyping = false;
     document.getElementById('tut-text').innerHTML = _tutFullText + '<span class="tut-cursor"></span>';
     return;
   }
-  // Advance to next step
   _tutStep++;
   if(_tutStep >= TUTORIAL_STEPS.length){
     endTutorial();
@@ -1155,18 +1151,12 @@ function tutTap(){
   showTutStep(_tutStep);
 }
 
-function buildDots(){
-  const dots = document.getElementById('tut-dots');
-  dots.innerHTML = TUTORIAL_STEPS.map((_, i) =>
-    '<div class="tut-dot" id="tut-dot-'+i+'"></div>'
-  ).join('');
-}
-
-function updateDots(){
-  TUTORIAL_STEPS.forEach((_, i) => {
-    const d = document.getElementById('tut-dot-'+i);
-    if(d) d.className = 'tut-dot' + (i === _tutStep ? ' active' : '');
-  });
+function updateStepLabel(){
+  const el = document.getElementById('tut-step');
+  if(el) el.textContent = 'STEP ' + (_tutStep + 1) + '/' + TUTORIAL_STEPS.length;
+  // Update NEXT button text for last step
+  const btn = document.getElementById('tut-btn-next');
+  if(btn) btn.textContent = _tutStep >= TUTORIAL_STEPS.length - 1 ? 'FINISH ✓' : 'NEXT →';
 }
 
 function showTutStep(idx){
@@ -1175,16 +1165,15 @@ function showTutStep(idx){
   _tutFullText = text;
   _tutDisplayed = '';
   _tutTyping = true;
-  updateDots();
+  updateStepLabel();
 
   // Auto-navigate to correct tab
   if(step.tab) showTab(step.tab);
 
-  // Position spotlight (small delay for tab render)
+  // Position spotlight after tab render
   setTimeout(()=>{
-    positionSpotlight(step.target, step.pos);
-    positionCard(step.target, step.pos);
-  }, step.tab ? 80 : 0);
+    positionSpotlight(step.target);
+  }, step.tab ? 100 : 0);
 
   // Typing effect
   clearInterval(_tutCharTimer);
@@ -1192,7 +1181,6 @@ function showTutStep(idx){
   const el = document.getElementById('tut-text');
   el.innerHTML = '<span class="tut-cursor"></span>';
 
-  // Typing sound cadence
   let soundTick = 0;
   _tutCharTimer = setInterval(()=>{
     if(i < text.length){
@@ -1200,77 +1188,38 @@ function showTutStep(idx){
       el.innerHTML = _tutDisplayed + '<span class="tut-cursor"></span>';
       i++;
       soundTick++;
-      // Play typing sound every 3 chars
       if(soundTick % 3 === 0) playTypingSound();
     } else {
       clearInterval(_tutCharTimer);
       _tutTyping = false;
     }
-  }, 28);
+  }, 26);
 }
 
-function positionSpotlight(selector, pos){
+function positionSpotlight(selector){
   const sp = document.getElementById('tut-spotlight');
+  const bg = document.getElementById('tut-bg');
   if(!selector){
-    sp.style.cssText = 'display:none';
+    // No spotlight — just dark overlay
+    sp.style.display = 'none';
+    bg.style.background = 'rgba(0,0,0,0.85)';
     return;
   }
-  const el = document.querySelector(selector);
-  if(!el){ sp.style.cssText = 'display:none'; return; }
-  const r = el.getBoundingClientRect();
-  const pad = 6;
-  sp.style.cssText = [
-    'display:block',
-    'left:'+(r.left-pad)+'px',
-    'top:'+(r.top-pad)+'px',
-    'width:'+(r.width+pad*2)+'px',
-    'height:'+(r.height+pad*2)+'px',
-  ].join(';');
-}
-
-function positionCard(selector, pos){
-  const card = document.getElementById('tut-card');
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-
-  if(!selector || pos === 'center'){
-    card.style.left = Math.max(8, (vw-320)/2) + 'px';
-    card.style.top = (vh/2 - 120) + 'px';
-    card.style.bottom = 'auto';
-    return;
-  }
-
   const el = document.querySelector(selector);
   if(!el){
-    card.style.left = Math.max(8, (vw-320)/2) + 'px';
-    card.style.top = (vh/2-120)+'px';
+    sp.style.display = 'none';
+    bg.style.background = 'rgba(0,0,0,0.85)';
     return;
   }
-
+  // Spotlight active — bg must be transparent (box-shadow handles darkening)
+  bg.style.background = 'rgba(0,0,0,0)';
   const r = el.getBoundingClientRect();
-  const cardW = Math.min(320, vw - 16);
-  card.style.width = cardW + 'px';
-  card.style.left = Math.max(8, Math.min(r.left, vw - cardW - 8)) + 'px';
-
-  if(pos === 'below'){
-    const top = r.bottom + 12;
-    if(top + 200 < vh){
-      card.style.top = top + 'px';
-      card.style.bottom = 'auto';
-    } else {
-      card.style.bottom = (vh - r.top + 12) + 'px';
-      card.style.top = 'auto';
-    }
-  } else {
-    const bottom = vh - r.top + 12;
-    if(bottom + 200 < vh){
-      card.style.bottom = bottom + 'px';
-      card.style.top = 'auto';
-    } else {
-      card.style.top = r.bottom + 12 + 'px';
-      card.style.bottom = 'auto';
-    }
-  }
+  const pad = 8;
+  sp.style.display = 'block';
+  sp.style.left = (r.left - pad) + 'px';
+  sp.style.top = (r.top - pad) + 'px';
+  sp.style.width = (r.width + pad * 2) + 'px';
+  sp.style.height = (r.height + pad * 2) + 'px';
 }
 
 // Typing sound — very soft, short blip
@@ -1558,21 +1507,21 @@ if('serviceWorker' in navigator){
 </script>
 
 <!-- TUTORIAL OVERLAY -->
-<div id="tut-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;pointer-events:all;font-family:'Share Tech Mono',monospace;">
-  <div id="tut-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0);transition:background .4s;"></div>
-  <div id="tut-spotlight" style="display:none;position:absolute;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,0.82),0 0 0 3px #39ff88,0 0 24px 4px #39ff88;transition:all .5s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:1;"></div>
-  <div id="tut-card" style="position:absolute;background:#0d1f0d;border:1px solid #2a5a2a;border-radius:10px;padding:14px;z-index:2;max-width:90vw;width:300px;box-shadow:0 4px 32px rgba(0,255,100,.12);" onclick="tutTap()">
-    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;">
-      <canvas id="tut-scientist" width="72" height="72" style="flex-shrink:0;image-rendering:pixelated;border:1px solid #2a5a2a;border-radius:6px;background:#0a1a0a;"></canvas>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:9px;color:#15aa44;letter-spacing:2px;margin-bottom:4px;">DR. ELENA VOLKOV</div>
-        <div id="tut-text" style="font-size:11px;color:#39ff88;line-height:1.6;min-height:52px;"></div>
+<div id="tut-overlay" style="display:none;">
+  <div id="tut-bg" class="tut-bg"></div>
+  <div id="tut-spotlight" style="display:none;" class="tut-spotlight"></div>
+  <div id="tut-card" class="tut-card">
+    <div class="tut-card-header">
+      <canvas id="tut-scientist" width="80" height="80" class="tut-scientist"></canvas>
+      <div class="tut-card-title">
+        <div class="tut-name">DR. ELENA VOLKOV</div>
+        <div id="tut-step" class="tut-step">STEP 1/10</div>
       </div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid #1a3a1a;">
-      <button onclick="event.stopPropagation();skipTutorial()" style="font-size:9px;color:#2a5a2a;letter-spacing:1px;cursor:pointer;padding:2px 6px;border:1px solid #1a3a1a;border-radius:3px;background:transparent;font-family:'Share Tech Mono',monospace;">SKIP</button>
-      <div id="tut-dots" style="display:flex;gap:4px;"></div>
-      <div style="font-size:9px;color:#2a5a2a;letter-spacing:1px;animation:pulse 2s ease-in-out infinite;">TAP TO CONTINUE</div>
+    <div id="tut-text" class="tut-text"></div>
+    <div class="tut-buttons">
+      <button id="tut-btn-next" class="tut-btn-next" onclick="tutTap()">NEXT →</button>
+      <button class="tut-btn-skip" onclick="skipTutorial()">SKIP</button>
     </div>
   </div>
 </div>
