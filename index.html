@@ -163,6 +163,40 @@ body{font-family:'Share Tech Mono',monospace;color:var(--green);padding:8px;padd
 .tut-btn-skip{flex:1;padding:13px;background:transparent;color:#39ff88;border:2px solid #2a5a2a;border-radius:10px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:2px;cursor:pointer;transition:border-color .15s;}
 .tut-btn-skip:active{border-color:#39ff88;}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+/* PRESTIGE SYSTEM */
+.pp-display{display:flex;align-items:center;justify-content:space-between;background:#0c0814;border:1px solid #6a2aaa;border-radius:8px;padding:10px 14px;margin-bottom:8px;}
+.pp-label{font-size:10px;color:#9966bb;letter-spacing:1px;}
+.pp-value{font-family:'Orbitron',monospace;font-size:18px;color:#dd99ff;font-weight:700;}
+.prestige-section{background:#0c0814;border:1px solid #4a1a7a;border-radius:8px;padding:12px;margin-bottom:8px;}
+.prestige-section-title{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;margin-bottom:10px;}
+.prestige-section-title.daily{color:var(--amber);}
+.prestige-section-title.shop{color:var(--green);}
+/* DAILY CHALLENGES */
+.daily-card{background:#0f1a0f;border:1px solid var(--border);border-radius:6px;padding:10px;margin-bottom:6px;position:relative;}
+.daily-card.done{border-color:#1a4a1a;opacity:.65;}
+.daily-name{font-size:11px;color:var(--green);margin-bottom:4px;padding-right:40px;}
+.daily-reward-badge{position:absolute;top:10px;right:10px;background:#1a0a2a;border:1px solid #8833cc;border-radius:8px;padding:1px 6px;font-size:9px;color:#dd99ff;}
+.daily-progress{font-size:10px;color:var(--text);margin:4px 0;}
+.daily-progress span{color:var(--amber);}
+.daily-mini-bar{height:3px;background:#1a3a1a;border-radius:2px;margin:4px 0;overflow:hidden;}
+.daily-mini-fill{height:100%;background:linear-gradient(90deg,var(--amber),#ffee00);border-radius:2px;transition:width .4s;}
+.daily-claim-btn{width:100%;margin-top:6px;background:#0a2a0a;border:1px solid var(--green3);border-radius:4px;padding:5px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--green);cursor:pointer;letter-spacing:1px;}
+.daily-claim-btn:active{transform:scale(.97);}
+.daily-claim-btn.claimed{background:#0a0f0a;border-color:#1a3a1a;color:var(--dim);cursor:default;}
+.daily-reset{font-size:9px;color:var(--dim);text-align:center;margin-top:6px;letter-spacing:1px;}
+/* PRESTIGE SHOP */
+.shop-item{background:#0f0a1a;border:1px solid #3a1a5a;border-radius:6px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+.shop-item.maxed{border-color:#1a1530;opacity:.55;}
+.shop-item-info{flex:1;min-width:0;}
+.shop-item-name{font-size:11px;color:#dd99ff;margin-bottom:3px;}
+.shop-item-desc{font-size:9px;color:#664488;line-height:1.5;}
+.shop-item-right{text-align:right;flex-shrink:0;}
+.shop-item-cost{font-family:'Orbitron',monospace;font-size:13px;color:#dd99ff;margin-bottom:4px;}
+.shop-item-owned{font-size:9px;color:#664488;}
+.shop-buy-btn{background:#1a0a2a;border:1px solid #8833cc;border-radius:4px;padding:6px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;color:#cc88ff;cursor:pointer;display:block;width:100%;margin-top:4px;letter-spacing:1px;}
+.shop-buy-btn:active{transform:scale(.97);}
+.shop-buy-btn.cant{border-color:#2a1a3a;color:#442266;cursor:default;}
+.shop-buy-btn.maxed-btn{border-color:#1a1530;color:#331a4a;cursor:default;}
 .notif{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#001f0d;border:1px solid var(--green);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green);pointer-events:none;opacity:0;transition:opacity .3s;z-index:100;white-space:nowrap;max-width:90vw;}
 .ticker{font-size:10px;color:var(--green3);text-align:center;margin-top:10px;letter-spacing:1px;opacity:.7;}
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(57,255,136,.012) 2px,rgba(57,255,136,.012) 4px);pointer-events:none;z-index:0;}
@@ -175,6 +209,7 @@ body>*{position:relative;z-index:1;}
   <div class="game-title">&#9883; NUCLEAR TYCOON</div>
   <div style="display:flex;align-items:center;gap:6px;">
     <div class="rebirth-badge" id="rbadge"></div>
+    <div class="pp-badge" id="pp-badge" style="display:none;background:#1a0a2a;border:1px solid #8833cc;border-radius:10px;padding:2px 8px;font-size:10px;color:#dd99ff;"></div>
     <button class="settings-btn" onclick="showTab('cfg')" title="Settings">&#9881;</button>
   </div>
 </div>
@@ -213,7 +248,7 @@ body>*{position:relative;z-index:1;}
 <div class="tabs">
   <div class="tab active" id="tab-upg" onclick="showTab('upg')" data-lbl="tab_upg">UPGRADES</div>
   <div class="tab" id="tab-res" onclick="showTab('res')" data-lbl="tab_res">LAB</div>
-  <div class="tab" id="tab-reb" onclick="showTab('reb')" data-lbl="tab_reb">REBIRTH</div>
+  <div class="tab" id="tab-reb" onclick="showTab('reb')" data-lbl="tab_reb">PRESTIGE</div>
   <div class="tab" id="tab-stat" onclick="showTab('stat')" data-lbl="tab_stat">STATS</div>
   <div class="tab" id="tab-cfg" onclick="showTab('cfg')" data-lbl="tab_cfg">&#9881;</div>
 </div>
@@ -226,12 +261,29 @@ body>*{position:relative;z-index:1;}
   <div class="research-grid" id="research-grid"></div>
 </div>
 <div id="view-reb" style="display:none">
-  <div class="rebirth-panel">
+  <!-- REBIRTH PROTOCOL -->
+  <div class="rebirth-panel" style="margin-bottom:8px;">
     <div class="rebirth-header" id="lbl-reb-header">REBIRTH PROTOCOL</div>
     <div class="rebirth-info" id="reb-info"></div>
     <div class="rebirth-progress"><div class="rebirth-prog-fill" id="reb-prog" style="width:0%"></div></div>
     <button class="rebirth-btn" id="reb-btn" onclick="doRebirth()">INITIATE REBIRTH</button>
     <div class="rebirth-history" id="reb-hist"></div>
+  </div>
+  <!-- PP DISPLAY -->
+  <div class="pp-display">
+    <span class="pp-label">&#11042; PRESTIGE POINTS</span>
+    <span class="pp-value" id="pp-val">0 PP</span>
+  </div>
+  <!-- DAILY CHALLENGES -->
+  <div class="prestige-section">
+    <div class="prestige-section-title daily">&#9201; DAILY CHALLENGES</div>
+    <div id="daily-list"></div>
+    <div class="daily-reset" id="daily-reset"></div>
+  </div>
+  <!-- PRESTIGE SHOP -->
+  <div class="prestige-section">
+    <div class="prestige-section-title shop">&#11088; PRESTIGE SHOP</div>
+    <div id="shop-list"></div>
   </div>
 </div>
 <div id="view-stat" style="display:none">
@@ -295,7 +347,7 @@ body>*{position:relative;z-index:1;}
 // ── I18N ──────────────────────────────────────────────────────────
 const STRINGS = {
   en: {
-    tab_upg:'UPGRADES', tab_res:'LAB', tab_reb:'REBIRTH', tab_stat:'STATS', tab_cfg:'&#9881;',
+    tab_upg:'UPGRADES', tab_res:'LAB', tab_reb:'PRESTIGE', tab_stat:'STATS', tab_cfg:'&#9881;',
     lbl_usd:'USD', lbl_energy:'ENERGY (MW)',
     lbl_sources:'ENERGY SOURCES \u2014 tap to buy',
     lbl_upgrades_title:'AVAILABLE UPGRADES',
@@ -368,7 +420,7 @@ const STRINGS = {
     ],
   },
   es: {
-    tab_upg:'MEJORAS', tab_res:'LAB', tab_reb:'REBIRTH', tab_stat:'STATS', tab_cfg:'&#9881;',
+    tab_upg:'MEJORAS', tab_res:'LAB', tab_reb:'PRESTIGE', tab_stat:'STATS', tab_cfg:'&#9881;',
     lbl_usd:'USD', lbl_energy:'ENERGIA (MW)',
     lbl_sources:'FUENTES DE ENERGIA \u2014 toca para comprar',
     lbl_upgrades_title:'UPGRADES DISPONIBLES',
@@ -460,7 +512,7 @@ function setLang(l){
   const activeTab = document.querySelector('.tab.active');
   if(activeTab){
     const id=activeTab.id.replace('tab-','');
-    if(id==='reb') renderRebirth();
+    if(id==='reb') renderPrestige();
     if(id==='stat') renderStats();
     if(id==='cfg') renderSettings();
   }
@@ -626,6 +678,184 @@ const MILESTONES = [
   {id:'m14', req:()=>G.stats.totalPlayTime>=36000},
 ];
 
+// ── DAILY CHALLENGES ─────────────────────────────────────────────
+const CHALLENGE_POOL = [
+  {id:'dc1',  en:'Earn $5B in one run',          es:'Gana $5B en una sola run',         check:()=>G.earned>=5e9,              pct:()=>Math.min(1,G.earned/5e9),              reward:20},
+  {id:'dc2',  en:'Earn $500B in one run',         es:'Gana $500B en una run',            check:()=>G.earned>=5e11,             pct:()=>Math.min(1,G.earned/5e11),             reward:45},
+  {id:'dc3',  en:'Earn $100T in one run',         es:'Gana $100T en una run',            check:()=>G.earned>=1e14,             pct:()=>Math.min(1,G.earned/1e14),             reward:90},
+  {id:'dc4',  en:'Reach $1Q lifetime earnings',   es:'Alcanza $1Q ganado de por vida',   check:()=>G.stats.allTimeEarned>=1e15,pct:()=>Math.min(1,G.stats.allTimeEarned/1e15),reward:120},
+  {id:'dc5',  en:'Complete 15 upgrades this run', es:'Completa 15 mejoras en esta run',  check:()=>G.upgBought.length>=15,     pct:()=>Math.min(1,G.upgBought.length/15),     reward:35},
+  {id:'dc6',  en:'Complete ALL 20 upgrades',      es:'Completa TODAS las 20 mejoras',    check:()=>G.upgBought.length>=20,     pct:()=>Math.min(1,G.upgBought.length/20),     reward:70},
+  {id:'dc7',  en:'Complete all 14 researches',    es:'Completa las 14 investigaciones',  check:()=>G.resDone.length>=14,       pct:()=>Math.min(1,G.resDone.length/14),       reward:75},
+  {id:'dc8',  en:'Perform 5 rebirths total',      es:'Realiza 5 renacimientos en total', check:()=>G.rebirths>=5,              pct:()=>Math.min(1,G.rebirths/5),              reward:50},
+  {id:'dc9',  en:'Perform 15 rebirths total',     es:'Realiza 15 renacimientos en total',check:()=>G.rebirths>=15,             pct:()=>Math.min(1,G.rebirths/15),             reward:100},
+  {id:'dc10', en:'Own 75 uranium reactors',       es:'Ten 75 reactores de uranio',       check:()=>(G.owned.uranium||0)>=75,   pct:()=>Math.min(1,(G.owned.uranium||0)/75),   reward:30},
+  {id:'dc11', en:'Own 20 quantum reactors',       es:'Ten 20 reactores quantum',         check:()=>(G.owned.quantum||0)>=20,   pct:()=>Math.min(1,(G.owned.quantum||0)/20),   reward:80},
+  {id:'dc12', en:'Reach x3.00 rebirth multiplier',es:'Llega a x3.00 de multiplicador',  check:()=>G.rbMult>=3,                pct:()=>Math.min(1,(G.rbMult-1)/2),            reward:60},
+  {id:'dc13', en:'Reach x10.00 rebirth multiplier',es:'Llega a x10.00 de multiplicador',check:()=>G.rbMult>=10,               pct:()=>Math.min(1,(G.rbMult-1)/9),            reward:150},
+  {id:'dc14', en:'Buy 200 total reactors',        es:'Compra 200 reactores en total',    check:()=>G.stats.totalBought>=200,   pct:()=>Math.min(1,G.stats.totalBought/200),   reward:40},
+  {id:'dc15', en:'Buy 1000 total reactors',       es:'Compra 1000 reactores en total',   check:()=>G.stats.totalBought>=1000,  pct:()=>Math.min(1,G.stats.totalBought/1000),  reward:110},
+  {id:'dc16', en:'Generate 1T energy',            es:'Genera 1T de energia',             check:()=>G.energy>=1e12,             pct:()=>Math.min(1,G.energy/1e12),             reward:55},
+  {id:'dc17', en:'Earn $10M in under 10 minutes', es:'Gana $10M en menos de 10 minutos', check:()=>G.stats.totalPlayTime<600&&G.stats.allTimeEarned>=1e7, pct:()=>G.stats.allTimeEarned>=1e7?1:Math.min(1,G.stats.allTimeEarned/1e7), reward:65},
+  {id:'dc18', en:'Have income over $10B/sec',     es:'Ten ingresos sobre $10B/seg',       check:()=>totalRate()>=1e10,          pct:()=>Math.min(1,totalRate()/1e10),          reward:85},
+];
+
+// ── PRESTIGE SHOP ────────────────────────────────────────────────
+const SHOP_ITEMS = [
+  {id:'s1', maxBuys:20, cost:15,  en:'+5% global production',      es:'+5% produccion global',       desc_en:'Permanent multiplier on all income',          desc_es:'Multiplicador permanente en todos los ingresos'},
+  {id:'s2', maxBuys:8,  cost:35,  en:'Research costs -10%',        es:'Costos de investigacion -10%', desc_en:'Discount stacks with each purchase',           desc_es:'El descuento se acumula con cada compra'},
+  {id:'s3', maxBuys:6,  cost:50,  en:'Offline income +2 hours',    es:'Ingresos offline +2 horas',    desc_en:'Max offline time increases (base: 8h)',        desc_es:'Tiempo offline maximo aumenta (base: 8h)'},
+  {id:'s4', maxBuys:10, cost:25,  en:'Start run with +5 uranium',  es:'Comienza con +5 uranio extra', desc_en:'Extra reactors at the start of each rebirth',  desc_es:'Reactores extra al inicio de cada rebirth'},
+  {id:'s5', maxBuys:5,  cost:75,  en:'Rebirth requirement -5%',    es:'Requisito de rebirth -5%',     desc_en:'Reduces the $500M earning requirement',        desc_es:'Reduce el requisito de $500M'},
+  {id:'s6', maxBuys:5,  cost:40,  en:'Boost duration +20%',        es:'Duracion del boost +20%',      desc_en:'BOOST lasts longer with each purchase',        desc_es:'El BOOST dura mas con cada compra'},
+  {id:'s7', maxBuys:1,  cost:200, en:'Unlock VOID ENERGY reactor', es:'Desbloquear reactor VOID ENERGY', desc_en:'8th reactor — 10x stronger than Quantum',   desc_es:'8vo reactor — 10x mas fuerte que Quantum'},
+];
+
+// ── PRESTIGE HELPERS ────────────────────────────────────────────
+function getShopMult()    { return Math.pow(1.05, G.shopBought['s1']||0); }
+function getResDisc()     { return Math.pow(0.90, G.shopBought['s2']||0); }
+function getOfflineHours(){ return 8 + 2*(G.shopBought['s3']||0); }
+function getStartUranium(){ return 1 + 5*(G.shopBought['s4']||0); }
+function getRebCost()     { return REBIRTH_COST * Math.pow(0.95, G.shopBought['s5']||0); }
+function getBoostDur()    { return 600 * Math.pow(1.20, G.shopBought['s6']||0); }
+function ppRewardForRebirth(n){ return 10 + n * 5; } // 1st=15, 2nd=20, ...
+
+function getDailyKey(){ return new Date().toISOString().split('T')[0]; }
+function seededRand(seed){
+  let s=seed|0;
+  return function(){ s=(s*1664525+1013904223)&0xffffffff; return (s>>>0)/4294967295; };
+}
+function getDailyChallenges(){
+  const key=getDailyKey();
+  const seed=key.split('').reduce((a,c)=>a+c.charCodeAt(0),0)*31337;
+  const rand=seededRand(seed);
+  const pool=[...CHALLENGE_POOL];
+  const result=[];
+  while(result.length<3&&pool.length>0){
+    const idx=Math.floor(rand()*pool.length);
+    result.push(pool.splice(idx,1)[0]);
+  }
+  return result;
+}
+function checkDailyReset(){
+  const today=getDailyKey();
+  if(!G.dailyChallenges||G.dailyChallenges.lastDay!==today){
+    G.dailyChallenges={lastDay:today,claimed:[]};
+  }
+}
+function claimDaily(id){
+  checkDailyReset();
+  if(G.dailyChallenges.claimed.includes(id)) return;
+  const ch=CHALLENGE_POOL.find(c=>c.id===id);
+  if(!ch||!ch.check()) return;
+  G.dailyChallenges.claimed.push(id);
+  G.pp=(G.pp||0)+ch.reward;
+  sfxMilestone();
+  notify('+'+ ch.reward +' PP — '+(lang==='es'?ch.es:ch.en));
+  updatePPBadge();
+  renderPrestige();
+  saveGame();
+}
+function buyShopItem(id){
+  const item=SHOP_ITEMS.find(s=>s.id===id);
+  if(!item) return;
+  const bought=G.shopBought[id]||0;
+  if(bought>=item.maxBuys) return;
+  if((G.pp||0)<item.cost) return;
+  G.pp-=item.cost;
+  G.shopBought[id]=bought+1;
+  // Void reactor unlock
+  if(id==='s7') addVoidReactor();
+  sfxUpgrade();
+  notify(lang==='es'?item.es:item.en);
+  updatePPBadge();
+  renderPrestige();
+  renderResGrid();
+  saveGame();
+}
+function addVoidReactor(){
+  // Void reactor already in RESOURCES if bought
+  if(!RESOURCES.find(r=>r.id==='void')){
+    RESOURCES.push({id:'void',icon:'&#x1F30C;',base:1500000,baseCost:5e12,unlockAt:0,isVoid:true});
+    G.owned.void=G.owned.void||0;
+    G.rm.void=G.rm.void||1;
+  }
+}
+function updatePPBadge(){
+  const badge=document.getElementById('pp-badge');
+  if(!badge) return;
+  if((G.pp||0)>0||G.rebirths>0){
+    badge.style.display='inline-block';
+    badge.textContent='&#11042; '+(G.pp||0)+' PP';
+  } else {
+    badge.style.display='none';
+  }
+}
+
+function renderPrestige(){
+  checkDailyReset();
+  // PP value
+  const ppEl=document.getElementById('pp-val');
+  if(ppEl) ppEl.textContent=(G.pp||0)+' PP';
+  updatePPBadge();
+  renderRebirth();
+  renderDailyChallenges();
+  renderShop();
+}
+
+function renderDailyChallenges(){
+  const el=document.getElementById('daily-list');
+  if(!el) return;
+  const challenges=getDailyChallenges();
+  const now=new Date();
+  const midnight=new Date(now); midnight.setHours(24,0,0,0);
+  const secsLeft=Math.floor((midnight-now)/1000);
+  const h=Math.floor(secsLeft/3600), m=Math.floor((secsLeft%3600)/60);
+  document.getElementById('daily-reset').textContent='Resets in '+h+'h '+m+'m';
+
+  el.innerHTML=challenges.map(ch=>{
+    const claimed=G.dailyChallenges.claimed.includes(ch.id);
+    const done=ch.check();
+    const pct=Math.round(ch.pct()*100);
+    const name=lang==='es'?ch.es:ch.en;
+    return '<div class="daily-card'+(claimed?' done':'')+'">'
+      +'<div class="daily-name">'+name+'</div>'
+      +'<div class="daily-reward-badge">+'+ch.reward+' PP</div>'
+      +'<div class="daily-progress">Progress: <span>'+pct+'%</span></div>'
+      +'<div class="daily-mini-bar"><div class="daily-mini-fill" style="width:'+pct+'%"></div></div>'
+      +'<button class="daily-claim-btn'+(claimed?' claimed':'')+'" onclick="claimDaily(\''+ch.id+'\')">'
+      +(claimed?'&#10003; CLAIMED':done?'CLAIM REWARD':'NOT YET')
+      +'</button>'
+      +'</div>';
+  }).join('');
+}
+
+function renderShop(){
+  const el=document.getElementById('shop-list');
+  if(!el) return;
+  const pp=G.pp||0;
+  el.innerHTML=SHOP_ITEMS.map(item=>{
+    const bought=G.shopBought[item.id]||0;
+    const maxed=bought>=item.maxBuys;
+    const canBuy=!maxed&&pp>=item.cost;
+    const name=lang==='es'?item.es:item.en;
+    const desc=lang==='es'?item.desc_es:item.desc_en;
+    return '<div class="shop-item'+(maxed?' maxed':'')+'">'
+      +'<div class="shop-item-info">'
+        +'<div class="shop-item-name">'+name+'</div>'
+        +'<div class="shop-item-desc">'+desc+'</div>'
+        +'<button class="shop-buy-btn'+(maxed?' maxed-btn':canBuy?'':' cant')+'" onclick="buyShopItem(\''+item.id+'\')">'
+        +(maxed?'MAXED':canBuy?'BUY':'LOCKED')
+        +'</button>'
+      +'</div>'
+      +'<div class="shop-item-right">'
+        +'<div class="shop-item-cost">'+item.cost+' PP</div>'
+        +'<div class="shop-item-owned">'+bought+' / '+item.maxBuys+'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
 // ── GAME STATE ────────────────────────────────────────────────────
 let G = {
   money:0, earned:0, energy:0,
@@ -637,6 +867,9 @@ let G = {
   boost:{active:false,endsAt:0,cooldownUntil:0},
   tutorialDone:false,
   lastSave:Date.now(), lang:'en',
+  pp:0,
+  shopBought:{},
+  dailyChallenges:{lastDay:'',claimed:[]},
   stats:{
     totalPlayTime:0, allTimeEarned:0, totalBought:0, totalUpgrades:0,
     totalResearch:0, totalRebirths:0, bestRate:0, peakMoney:0,
@@ -666,6 +899,11 @@ function loadGame(){
     G.tutorialDone=s.tutorialDone||false;
     if(G.boost.endsAt&&Date.now()>G.boost.endsAt) G.boost.active=false;
     G.lang=s.lang||'en';
+    G.pp=s.pp||0;
+    G.shopBought=Object.assign({},s.shopBought||{});
+    G.dailyChallenges=Object.assign({lastDay:'',claimed:[]},s.dailyChallenges||{});
+    // Re-apply void reactor if unlocked
+    if((G.shopBought['s7']||0)>0) addVoidReactor();
     G.stats=Object.assign({
       totalPlayTime:0,allTimeEarned:0,totalBought:0,totalUpgrades:0,
       totalResearch:0,totalRebirths:0,bestRate:0,peakMoney:0,
@@ -674,7 +912,7 @@ function loadGame(){
     G.stats.sessionStart=Date.now();
     G.upgBought.forEach(id=>{const u=UPGRADES.find(x=>x.id===id);if(u)u.eff();});
     G.resDone.forEach(id=>{const r=RESEARCH.find(x=>x.id===id);if(r)r.fx();});
-    const offSecs=Math.min((Date.now()-G.lastSave)/1000,8*3600);
+    const offSecs=Math.min((Date.now()-G.lastSave)/1000,getOfflineHours()*3600);
     if(offSecs>10){
       const inc=totalRate()*offSecs;
       G.money+=inc; G.earned+=inc; G.stats.allTimeEarned+=inc;
@@ -697,8 +935,9 @@ function resetGame(){
 // ── CALCULATIONS ──────────────────────────────────────────────────
 function rate(id){
   const r=RESOURCES.find(x=>x.id===id);
+  if(!r) return 0;
   const bm=(G.boost&&G.boost.active&&Date.now()<G.boost.endsAt)?3:1;
-  return r.base*(G.owned[id]||0)*(G.rm[id]||1)*G.gm*G.rbMult*bm;
+  return r.base*(G.owned[id]||0)*(G.rm[id]||1)*G.gm*G.rbMult*bm*getShopMult();
 }
 function totalRate(){return RESOURCES.reduce((s,r)=>s+rate(r.id),0);}
 function totalEnergy(){return RESOURCES.reduce((s,r)=>s+rate(r.id)*r.base*0.04,0);}
@@ -773,8 +1012,9 @@ function buyUpg(id){
 function buyResearch(id){
   const r=RESEARCH.find(x=>x.id===id);
   if(!r||G.resDone.includes(id)) return;
-  if(G.money<r.cost) return;
-  G.money-=r.cost; G.resDone.push(id); r.fx();
+  const cost=Math.floor(r.cost*getResDisc());
+  if(G.money<cost) return;
+  G.money-=cost; G.resDone.push(id); r.fx();
   G.stats.totalResearch++;
   const ri=RESEARCH.findIndex(x=>x.id===id);
   sfxResearch();
@@ -783,17 +1023,26 @@ function buyResearch(id){
 }
 
 function doRebirth(){
-  if(G.earned<REBIRTH_COST){notify(T('reb_need',FMT(REBIRTH_COST-G.earned)));return;}
+  const rebCost=getRebCost();
+  if(G.earned<rebCost){notify(T('reb_need',FMT(rebCost-G.earned)));return;}
   G.rebirths++; G.stats.totalRebirths++;
   G.rbMult*=1.10;
+  // Award prestige points
+  const ppEarned=ppRewardForRebirth(G.rebirths);
+  G.pp=(G.pp||0)+ppEarned;
   G.money=0;G.earned=0;G.energy=0;
   G.rm={uranium:1,plutonium:1,thorium:1,fusion:1,antimatter:1,darkfuel:1,quantum:1};
+  if((G.shopBought['s7']||0)>0) G.rm.void=1;
   G.gm=1;G.upgBought=[];G.resDone=[];
-  G.owned={uranium:1,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0,quantum:0};
+  // Start uranium bonus from shop
+  const startU=getStartUranium();
+  G.owned={uranium:startU,plutonium:0,thorium:0,fusion:0,antimatter:0,darkfuel:0,quantum:0};
+  if((G.shopBought['s7']||0)>0) G.owned.void=0;
   sfxRebirth();
+  updatePPBadge();
   saveGame();
-  notify(T('reb_notif',G.rebirths,G.rbMult.toFixed(2)));
-  renderAll(); renderRebirth();
+  notify(T('reb_notif',G.rebirths,G.rbMult.toFixed(2))+' | +'+ppEarned+' PP');
+  renderAll(); renderPrestige();
   showInterstitial();
 }
 
@@ -841,24 +1090,30 @@ function renderResearch(){
   const el=document.getElementById('research-grid');
   el.innerHTML=RESEARCH.map((r,i)=>{
     const done=G.resDone.includes(r.id);
-    const can=G.money>=r.cost&&!done;
+    const disc=getResDisc();
+    const cost=Math.floor(r.cost*disc);
+    const can=G.money>=cost&&!done;
+    const discLabel=disc<1?' <span style="color:var(--green);font-size:8px;">('+Math.round((1-disc)*100)+'% OFF)</span>':'';
     return '<div class="res-research '+(done?'done':can?'affordable':'')+'" onclick="'+(done?'':'buyResearch(\''+r.id+'\')')+'">'
       +'<div class="rr-name">'+T('research')[i]+'</div>'
       +'<div class="rr-eff">'+r.effs[li()]+'</div>'
-      +'<div class="rr-cost">'+(done?T('completed'):FMT(r.cost))+'</div>'
+      +'<div class="rr-cost">'+(done?T('completed'):FMT(cost)+discLabel)+'</div>'
       +'</div>';
   }).join('');
 }
 
 function renderRebirth(){
-  const can=G.earned>=REBIRTH_COST;
-  const pct=Math.min(100,G.earned/REBIRTH_COST*100);
+  const rebCost=getRebCost();
+  const can=G.earned>=rebCost;
+  const pct=Math.min(100,G.earned/rebCost*100);
+  const ppNext=ppRewardForRebirth(G.rebirths+1);
   document.getElementById('reb-info').innerHTML=T('reb_desc',
-    G.rbMult.toFixed(2),(G.rbMult*1.1).toFixed(2),FMT(REBIRTH_COST),FMT(G.earned),FMT(REBIRTH_COST));
+    G.rbMult.toFixed(2),(G.rbMult*1.1).toFixed(2),FMT(rebCost),FMT(G.earned),FMT(rebCost))
+    +'<br><span style="color:#dd99ff">Prestige reward: +'+ppNext+' PP</span>';
   document.getElementById('reb-prog').style.width=pct+'%';
   const btn=document.getElementById('reb-btn');
   btn.className='rebirth-btn'+(can?' ready':'');
-  btn.textContent=can?T('reb_do'):T('reb_need',FMT(REBIRTH_COST-G.earned));
+  btn.textContent=can?T('reb_do'):T('reb_need',FMT(rebCost-G.earned));
   document.getElementById('reb-hist').innerHTML=G.rebirths>0?
     T('reb_done',G.rebirths,G.rbMult.toFixed(2)):'';
   const badge=document.getElementById('rbadge');
@@ -935,7 +1190,7 @@ function showTab(t){
     document.getElementById('view-'+id).style.display=id===t?'block':'none';
     document.getElementById('tab-'+id).className='tab'+(id===t?' active':'');
   });
-  if(t==='reb')  renderRebirth();
+  if(t==='reb')  renderPrestige();
   if(t==='res')  renderResearch();
   if(t==='upg')  renderUpgrades();
   if(t==='stat') renderStats();
@@ -957,6 +1212,15 @@ setInterval(()=>{
 },4500);
 
 function renderAll(){renderResGrid();renderUpgrades();renderResearch();}
+
+// Periodically refresh daily challenge progress if tab is open
+setInterval(()=>{
+  const activeTab=document.querySelector('.tab.active');
+  if(activeTab&&activeTab.id==='tab-reb'){
+    renderDailyChallenges();
+    renderRebirth();
+  }
+},30000);
 
 // ── PIXEL ART REACTOR ─────────────────────────────────────────────
 let reactorFrame=0;
@@ -1444,11 +1708,13 @@ function simulateAd(){
 
 function grantBoost(){
   const now=Date.now();
+  const dur=getBoostDur()*1000;
   G.boost.active=true;
-  G.boost.endsAt=now+BOOST_DURATION;
+  G.boost.endsAt=now+dur;
   G.boost.cooldownUntil=now+BOOST_COOLDOWN;
   sfxUpgrade();
-  notify(lang==='es'?'x3 produccion por 10 min!':'x3 production for 10 min!');
+  const mins=Math.round(getBoostDur()/60);
+  notify(lang==='es'?'x3 produccion por '+mins+' min!':'x3 production for '+mins+' min!');
   saveGame();
 }
 
@@ -1492,6 +1758,7 @@ function updateBoostUI(){
 
 loadGame();
 applyLang();
+updatePPBadge();
 setInterval(tick,80);
 setInterval(renderAll,900);
 setInterval(saveGame,15000);
